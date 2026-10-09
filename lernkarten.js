@@ -125,7 +125,11 @@ const Lernkarten = (() => {
       const box = h("div", "card");
       const b1 = h("button", "primary", (view === "archive" ? "Archiv wiederholen (" : "Üben (") + cur.length + ")");
       b1.style.width = "100%"; b1.onclick = () => practice(cur);
-      box.appendChild(b1); pr.appendChild(box);
+      box.appendChild(b1);
+      if(data.cards.length >= 2){
+        const bq = h("button", "ghost", "Quiz (Multiple Choice)"); bq.style.width = "100%"; bq.onclick = () => Quiz.start(cur); box.appendChild(bq);
+      }
+      pr.appendChild(box);
     } else {
       list.appendChild(h("div", "card empty", view === "archive"
         ? "Noch nichts im Archiv. Eine Karte kommt hierher, wenn du sie zweimal hintereinander gewusst hast."

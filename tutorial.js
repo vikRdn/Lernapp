@@ -11,6 +11,7 @@ const TUT_STEPS = [
   { icon:"compass", title:"Lerntyp", text:"Beantworte ein paar Fragen. Du erfährst, wie du lernst, und bekommst Tipps, die zu dir passen." },
   { icon:"folder", title:"Lernmittel", text:"Sammle Notizen, Bilder und PDFs und ordne sie deinen Prüfungen zu. Daraus kannst du Lernkarten machen." },
   { icon:"flag", title:"Ziele & Reflexion", text:"Setze dir Lernziele und hake sie ab. Nach dem Lernen schaust du kurz zurück: Was lief gut, was machst du anders?" },
+  { icon:"timer", title:"Fokus-Timer", text:"Lerne in Blöcken von 25 Minuten und mache danach eine Pause. Die App zählt deine Lernzeit." },
   { icon:"search", title:"Nachschlagen", text:"Schlage Begriffe bei Wikipedia nach und speichere die Zusammenfassung als Notiz." },
   { icon:"lock", title:"Deine Daten", text:"Alles bleibt auf deinem Gerät. Es gibt kein Konto. Mit dem „?“ oben rechts siehst du diese Einführung wieder." },
   { icon:"palette", title:"Wie soll die App aussehen?", look:true,
@@ -23,7 +24,8 @@ const FEATURES = [   // [Schlüssel, Titel, Beschreibung]
   ["lerntyp", "Lerntyp-Test", "Fragen und passende Tipps", "compass"],
   ["lernmittel", "Lernmittel", "Notizen, Bilder, PDFs, Lernkarten", "folder"],
   ["ziele", "Ziele & Reflexion", "Lernziele setzen und zurückschauen", "flag"],
-  ["wiki", "Nachschlagen", "Begriffe bei Wikipedia nachschlagen", "search"]
+  ["wiki", "Nachschlagen", "Begriffe bei Wikipedia nachschlagen", "search"],
+  ["fokus", "Fokus-Timer", "Lernen und Pausen im Wechsel", "timer"]
 ];
 function renderFeatures(){
   const box = document.getElementById("tutFeatures"); box.textContent = "";

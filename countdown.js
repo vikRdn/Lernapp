@@ -156,7 +156,8 @@ const Countdown = (() => {
       const tk = tasksOf(ex.id);
       if(tk.length) card.appendChild(el("p", "prog", tk.filter(x => x.status === "done").length + " von " + tk.length + " Aufgaben geschafft"));
       const act = el("div", "actions");
-      act.append(button("ghost", "Lernplan", () => openPlan(ex.id)),
+      const kb = button("ghost", " Kalender", () => Kalender.exportExam(ex.id)); kb.prepend(icon("calendar", 16));
+      act.append(button("ghost", "Lernplan", () => openPlan(ex.id)), kb,
                  button("ghost", "Bearbeiten", () => startEdit(ex)),
                  button("ghost danger", "Löschen", () => removeExam(ex)));
       card.appendChild(act); list.appendChild(card);

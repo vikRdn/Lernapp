@@ -62,7 +62,11 @@ const Backup = (() => {
       data.goals = list("goals", g => g && str(g.id) && str(g.text) && typeof g.done === "boolean");
       data.reflections = list("reflections", r => r && str(r.id) && str(r.createdAt) && Number.isInteger(r.confidence) && r.confidence >= 1 && r.confidence <= 5);
       data.learnTypeResult = d.learnTypeResult || null;
-      data.stats = { days:(d.stats && Array.isArray(d.stats.days) ? d.stats.days : []).filter(x => str(x) && /^\d{4}-\d{2}-\d{2}$/.test(x)).slice(-90) };
+      const cleanMin = {};
+      if(d.stats && d.stats.minutes && typeof d.stats.minutes === "object") Object.keys(d.stats.minutes).sort().slice(-90).forEach(k => {
+        const v = d.stats.minutes[k]; if(/^\d{4}-\d{2}-\d{2}$/.test(k) && Number.isFinite(v) && v >= 0 && v < 1440) cleanMin[k] = Math.round(v);
+      });
+      data.stats = { days:(d.stats && Array.isArray(d.stats.days) ? d.stats.days : []).filter(x => str(x) && /^\d{4}-\d{2}-\d{2}$/.test(x)).slice(-90), minutes:cleanMin };
       data.settings = Object.assign(defaultData().settings, d.settings || {});
       data.settings.features = Object.assign(defaultData().settings.features, data.settings.features);
       saveData(); location.reload();
@@ -168,5 +172,5 @@ const Backup = (() => {
     $("pkFile").onchange = () => { const f = $("pkFile").files[0]; if(f) pkImport(f); $("pkFile").value = ""; };
     render();
   }
-  return { init, render };
+  return { init, render, deliver };
 })();

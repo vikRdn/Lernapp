@@ -131,6 +131,12 @@ const Tour = (() => {
       });
       box.appendChild(out);
     },
+    fokus(box){
+      const out = h("p", "pvr", "Tippe auf Start, um einen Beispiel-Block zu sehen."), t = h("div", "timer"); t.textContent = "25:00";
+      t.style.fontSize = "2.4rem"; t.style.textAlign = "center";
+      buttons(box, [["s", "Start"]], () => { t.textContent = "24:59"; out.textContent = "Lernen läuft. Nach dem Block kommt eine Pause. Deine Lernzeit wird mitgezählt. (nur Beispiel)"; });
+      box.append(t, out);
+    },
     backup(box){
       const out = h("p", "pvr", "Tippe auf einen Knopf.");
       buttons(box, [["b", "Backup erstellen"], ["l", "Lernpaket teilen"]], k => {
@@ -160,6 +166,8 @@ const Tour = (() => {
       text:"Setze dir Lernziele und hake sie ab. Unter „Reflexion“ hältst du fest, was gut lief und was du änderst." },
     { view:"wiki", feature:"wiki", target:"#wkQuery", title:"Nachschlagen", preview:"wiki",
       text:"Schlage Begriffe bei Wikipedia nach und speichere die Zusammenfassung als Notiz. Das geht nur mit Internet." },
+    { view:"fokus", feature:"fokus", target:"#fkStart", title:"Fokus-Timer", preview:"fokus",
+      text:"Lerne in Blöcken und mache danach eine Pause. Das hilft deiner Aufmerksamkeit. Die App zählt deine Lernzeit pro Tag." },
     { view:"home", target:"#btnTheme", title:"Aussehen", preview:"theme",
       text:"Hell oder dunkel, dazu Farben und Design findest du auch in den Einstellungen." },
     { view:"settings", target:"#bkExport", title:"Backup und Teilen", preview:"backup",

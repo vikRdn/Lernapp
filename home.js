@@ -114,6 +114,10 @@ const Home = (() => {
         st.today ? "heute schon gelernt" : st.n ? "heute lernen, dann läuft sie weiter" : "heute lernen und starten",
         null, () => { if(f.lernmittel && data.cards.some(c => !c.archived)) Lernkarten.practiceOpen(); }, "flame"]);
     }
+    if(f.fokus !== false){
+      const wm = Fokus.weekMinutes();
+      tiles.push(["Lernzeit", wm + " Min.", "in den letzten 7 Tagen", null, () => showView("fokus"), "timer"]);
+    }
     if(f.countdown){
       const ids = new Set(upcoming.map(e => e.id)), tk = data.tasks.filter(x => ids.has(x.examId));
       if(tk.length){

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Lernen unter Prüfungsdruck</title>
-<link rel="stylesheet" href="style.css?v=2.4">
+<link rel="stylesheet" href="style.css?v=2.6">
 </head>
 <body>
 
@@ -152,6 +152,32 @@
     </div>
   </section>
 
+  <!-- FOKUS-TIMER -->
+  <section id="view-fokus" hidden>
+    <h2>Fokus-Timer</h2>
+    <p class="sub">Lerne in kurzen Blöcken und mache danach eine Pause. Das hilft deiner Aufmerksamkeit.</p>
+    <div class="card" style="text-align:center">
+      <small id="fkMode">Lernen</small>
+      <div class="timer" id="fkTime" role="timer">25:00</div>
+      <div class="bar"><i id="fkBar" style="width:0%"></i></div>
+      <div class="pvrow" style="justify-content:center;margin-top:14px">
+        <button class="primary" id="fkStart">Start</button>
+        <button class="ghost" id="fkReset">Zurücksetzen</button>
+        <button class="ghost" id="fkSkip">Überspringen</button>
+      </div>
+      <p class="lt-desc" style="margin:10px 0 0">Der Ton und das Vibrieren am Ende brauchen einen offenen Tab. Lass die App beim Lernen geöffnet.</p>
+    </div>
+    <div class="card">
+      <div class="field"><label for="fkWork">Lernen</label><select id="fkWork"></select></div>
+      <div class="field" style="margin-bottom:0"><label for="fkBreak">Pause</label><select id="fkBreak"></select></div>
+    </div>
+    <div class="card">
+      <h3>Deine Lernzeit</h3>
+      <p class="lt-desc" id="fkSum"></p>
+      <div class="week" id="fkWeek"></div>
+    </div>
+  </section>
+
   <!-- NACHSCHLAGEN (Wikipedia) -->
   <section id="view-wiki" hidden>
     <h2>Nachschlagen</h2>
@@ -174,6 +200,13 @@
       <div id="lookBox"></div>
     </div>
     <div class="card">
+      <h3 style="margin-top:0">App aktualisieren</h3>
+      <p class="lt-desc" style="margin-bottom:12px">Prüft, ob es eine neuere Version gibt, und lädt die App frisch. Deine Daten bleiben erhalten.</p>
+      <button class="primary" id="upCheck">Auf Update prüfen</button>
+      <button class="ghost" id="upReload" hidden>Frisch neu laden</button>
+      <p class="lt-desc" id="upMsg" role="status"></p>
+    </div>
+    <div class="card">
       <h3 style="margin-top:0">Rundgang</h3>
       <p class="lt-desc" style="margin-bottom:12px">Ich zeige dir Schritt für Schritt, wo du was findest.</p>
       <button class="primary" id="tourStart">Rundgang starten</button>
@@ -190,6 +223,16 @@
       <button type="button" class="pick" id="bkPick">Backup-Datei auswählen</button>
       <input type="file" id="bkFile" accept="application/json,.json" class="vh" tabindex="-1">
       <p class="lt-desc" id="bkMsg2" role="status"></p>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">Kalender</h3>
+      <p class="lt-desc" style="margin-bottom:12px">Übernimm deine Prüfungen in den Kalender deines Handys oder Computers, mit Erinnerungen 7 Tage vorher, am Vortag und am Prüfungstag. Eine einzelne Prüfung exportierst du im Countdown über „Kalender“.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <label class="featrow" style="margin:0"><input type="checkbox" id="kc_tasks" checked><span>Lernplan-Aufgaben</span></label>
+        <label class="featrow" style="margin:0"><input type="checkbox" id="kc_goals"><span>Ziele mit Termin</span></label>
+      </div>
+      <button class="primary" id="kcExport">Kalender-Datei erstellen</button>
+      <p class="lt-desc" id="kcMsg" role="status"></p>
     </div>
     <div class="card">
       <h3 style="margin-top:0">Lernpaket teilen</h3>
@@ -232,6 +275,7 @@
   <button class="tab" data-view="lerntyp"><i data-ic="compass"></i>Lerntyp</button>
   <button class="tab" data-view="lernmittel"><i data-ic="folder"></i>Lernmittel</button>
   <button class="tab" data-view="ziele"><i data-ic="flag"></i>Ziele &amp; Reflexion</button>
+  <button class="tab" data-view="fokus"><i data-ic="timer"></i>Fokus-Timer</button>
   <button class="tab" data-view="wiki"><i data-ic="search"></i>Nachschlagen</button>
   <button class="tab" data-view="settings"><i data-ic="sliders"></i>Einstellungen</button>
 </nav>
@@ -299,17 +343,21 @@
 </div>
 
 <!-- Die Scripte werden in dieser Reihenfolge geladen; spätere nutzen Funktionen der früheren. -->
-<script src="core.js?v=2.4"></script>
-<script src="tutorial.js?v=2.4"></script>
-<script src="countdown.js?v=2.4"></script>
-<script src="home.js?v=2.4"></script>
-<script src="lerntyp.js?v=2.4"></script>
-<script src="lernmittel.js?v=2.4"></script>
-<script src="lernkarten.js?v=2.4"></script>
-<script src="ziele.js?v=2.4"></script>
-<script src="wiki.js?v=2.4"></script>
-<script src="backup.js?v=2.4"></script>
-<script src="tour.js?v=2.4"></script>
-<script src="start.js?v=2.4"></script>
+<script src="core.js?v=2.6"></script>
+<script src="tutorial.js?v=2.6"></script>
+<script src="countdown.js?v=2.6"></script>
+<script src="home.js?v=2.6"></script>
+<script src="lerntyp.js?v=2.6"></script>
+<script src="lernmittel.js?v=2.6"></script>
+<script src="lernkarten.js?v=2.6"></script>
+<script src="quiz.js?v=2.6"></script>
+<script src="ziele.js?v=2.6"></script>
+<script src="wiki.js?v=2.6"></script>
+<script src="fokus.js?v=2.6"></script>
+<script src="kalender.js?v=2.6"></script>
+<script src="backup.js?v=2.6"></script>
+<script src="update.js?v=2.6"></script>
+<script src="tour.js?v=2.6"></script>
+<script src="start.js?v=2.6"></script>
 </body>
 </html>
