@@ -182,6 +182,46 @@ input[type=date]::-webkit-date-and-time-value{text-align:left;min-width:0}
 .pvsample{background:var(--pcard,#fff);color:var(--ptext,#1c1c1e);border-left:6px solid var(--pacc,var(--accent));border-radius:10px;padding:10px 12px}
 .pvsample small{display:block;opacity:.7}
 .pvsb{display:inline-block;margin-top:8px;padding:6px 12px;border-radius:9px;background:var(--pacc,var(--accent));color:#fff;font-size:.85rem}
+/* Symbole (eigene SVG-Icons statt System-Emojis) */
+.ic{display:inline-flex;align-items:center;justify-content:center;width:1.25em;height:1.25em;flex-shrink:0;vertical-align:-0.2em}
+.ic svg{width:100%;height:100%}
+.icon-btn .ic{font-size:1.15rem}
+.tab .ic{font-size:1.3rem}
+.linkcard .ic{font-size:1.7rem;color:var(--accent)}
+.sheet .big{color:var(--accent);display:flex;justify-content:center}
+.ico{width:48px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:var(--bg);color:var(--accent);flex-shrink:0}
+.thumb{width:48px;height:48px;border-radius:12px;object-fit:cover;flex-shrink:0;background:var(--bg)}
+/* Startseite: Lernstand */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:10px}
+.tile{background:var(--bg);border-radius:14px;padding:12px;text-align:left;border:0;color:var(--text);font:inherit;cursor:pointer}
+.tile small{display:block;color:var(--muted)}
+.tile b{display:block;font-size:1.35rem;margin:2px 0}
+.tile:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+/* Belohnungen: Kurzmeldung (Toast) und Erfolgsfeld */
+#toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);transform:translate(-50%,0);z-index:35;display:flex;align-items:center;gap:10px;background:var(--card);color:var(--text);border:1.5px solid var(--accent);border-radius:16px;padding:12px 16px;box-shadow:0 8px 28px rgba(0,0,0,.25);max-width:calc(100% - 32px);font-weight:600}
+#toast .ic{color:var(--accent)}
+.celebrate{position:relative;text-align:center;padding:18px 12px 6px;color:var(--accent);overflow:hidden}
+.celebrate b{display:block;color:var(--text);font-size:1.3rem;margin-top:6px}
+.celebrate small{display:block;color:var(--muted)}
+.confetti{position:absolute;inset:0;pointer-events:none}
+.confetti i{position:absolute;top:-12px;width:8px;height:12px;border-radius:2px;opacity:0}
+/* Animationen: dezent, abschaltbar (Einstellungen) und aus bei "Bewegung reduzieren" */
+@media (prefers-reduced-motion:no-preference){
+  #homeBox > .card{animation:rise .3s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  button{transition:transform .12s ease,background-color .2s,color .2s,border-color .2s}
+  button:active{transform:scale(.97)}
+  .flip{animation:flip .35s ease}
+  @keyframes flip{from{transform:rotateY(90deg);opacity:.3}to{transform:none;opacity:1}}
+  #toast:not([hidden]){animation:toastIn .3s ease}
+  @keyframes toastIn{from{opacity:0;transform:translate(-50%,14px)}to{opacity:1;transform:translate(-50%,0)}}
+  .confetti i{animation:fall 1.7s ease-in forwards}
+  @keyframes fall{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(170px) rotate(320deg)}}
+  .celebrate .ic{animation:pop .5s ease}
+  @keyframes pop{0%{transform:scale(.4)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+}
+html[data-motion="off"] *,html[data-motion="off"] *::before,html[data-motion="off"] *::after{animation:none!important;transition:none!important}
+html[data-motion="off"] .confetti{display:none}
 section[hidden]{display:none}
 /* Tutorial */
 #tutorial,#dialog,#addSheet{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;padding:16px}
@@ -203,13 +243,13 @@ section[hidden]{display:none}
 <body>
 
 <header>
-  <button class="icon-btn" id="btnMenu" aria-label="Menü öffnen" aria-expanded="false" aria-controls="drawer">☰</button>
+  <button class="icon-btn" id="btnMenu" aria-label="Menü öffnen" aria-expanded="false" aria-controls="drawer"><i data-ic="menu"></i></button>
   <h1><button class="brand" id="brand" aria-label="Zur Startseite">
     <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="7" fill="var(--accent)"/><path d="M7 12.5l3.2 3.2L17 8.8" stroke="var(--accent-text)" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
     <span>Lernen unter Prüfungsdruck</span></button></h1>
   <div class="icons">
     <button class="icon-btn" id="btnHelp" aria-label="Einführung nochmal ansehen">?</button>
-    <button class="icon-btn" id="btnTheme" aria-label="Hell oder dunkel umschalten">◐</button>
+    <button class="icon-btn" id="btnTheme" aria-label="Hell oder dunkel umschalten"><i data-ic="contrast"></i></button>
   </div>
 </header>
 
@@ -222,8 +262,8 @@ section[hidden]{display:none}
     <p class="sub" id="homeSub"></p>
     <button class="primary" id="homeAdd" style="width:100%;margin-bottom:12px">+ Hinzufügen</button>
     <div id="homeBox"></div>
-    <button class="linkcard" data-go="lerntyp"><span>🧭</span><div><b>Lerntyp herausfinden</b><small>Wie lernst du am besten?</small></div></button>
-    <button class="linkcard" data-go="lernmittel"><span>🗂️</span><div><b>Lernmittel</b><small>Notizen, Bilder und PDFs</small></div></button>
+    <button class="linkcard" data-go="lerntyp"><i data-ic="compass"></i><div><b>Lerntyp herausfinden</b><small>Wie lernst du am besten?</small></div></button>
+    <button class="linkcard" data-go="lernmittel"><i data-ic="folder"></i><div><b>Lernmittel</b><small>Notizen, Bilder und PDFs</small></div></button>
   </section>
 
   <section id="view-countdown" hidden>
@@ -373,11 +413,11 @@ section[hidden]{display:none}
 <div class="scrim" id="scrim"></div>
 <nav id="drawer" aria-label="Hauptmenü">
   <h2>Menü</h2>
-  <button class="tab" data-view="home" aria-current="page"><span>🏠</span>Start</button>
-  <button class="tab" data-view="countdown"><span>⏳</span>Countdown</button>
-  <button class="tab" data-view="lerntyp"><span>🧭</span>Lerntyp</button>
-  <button class="tab" data-view="lernmittel"><span>🗂️</span>Lernmittel</button>
-  <button class="tab" data-view="settings"><span>⚙️</span>Einstellungen</button>
+  <button class="tab" data-view="home" aria-current="page"><i data-ic="home"></i>Start</button>
+  <button class="tab" data-view="countdown"><i data-ic="calendar"></i>Countdown</button>
+  <button class="tab" data-view="lerntyp"><i data-ic="compass"></i>Lerntyp</button>
+  <button class="tab" data-view="lernmittel"><i data-ic="folder"></i>Lernmittel</button>
+  <button class="tab" data-view="settings"><i data-ic="sliders"></i>Einstellungen</button>
 </nav>
 
 <!-- ANSICHT FÜR LERNMITTEL (Notiz, Bild, PDF) -->
@@ -405,11 +445,14 @@ section[hidden]{display:none}
 <div id="addSheet" hidden role="dialog" aria-modal="true" aria-label="Hinzufügen">
   <div class="sheet" style="text-align:left">
     <h3 style="text-align:center;margin-bottom:14px">Was möchtest du hinzufügen?</h3>
-    <button class="linkcard" id="addExam" data-add="countdown" style="background:var(--bg)"><span>⏳</span><div><b>Prüfung</b><small>Fach und Datum eintragen</small></div></button>
-    <button class="linkcard" id="addMaterial" data-add="lernmittel" style="background:var(--bg)"><span>🗂️</span><div><b>Lerninhalt</b><small>Notiz, Bild oder PDF</small></div></button>
+    <button class="linkcard" id="addExam" data-add="countdown" style="background:var(--bg)"><i data-ic="calendar"></i><div><b>Prüfung</b><small>Fach und Datum eintragen</small></div></button>
+    <button class="linkcard" id="addMaterial" data-add="lernmittel" style="background:var(--bg)"><i data-ic="folder"></i><div><b>Lerninhalt</b><small>Notiz, Bild oder PDF</small></div></button>
     <button class="ghost" id="addCancel" style="width:100%">Abbrechen</button>
   </div>
 </div>
+
+<!-- KURZMELDUNG (Belohnungen) -->
+<div id="toast" role="status" aria-live="polite" hidden></div>
 
 <!-- BESTÄTIGUNGSDIALOG (ersetzt confirm(), das in manchen Browsern blockiert wird) -->
 <div id="dialog" hidden role="alertdialog" aria-modal="true" aria-labelledby="dlgText">
@@ -449,8 +492,8 @@ section[hidden]{display:none}
 const STORAGE_KEY = "lernapp.v1";
 
 function defaultData(){
-  return { version:1, settings:{ theme:null, design:"frisch", accent:"blau", tutorialDone:false, features:{ countdown:true, lerntyp:true, lernmittel:true } },
-           exams:[], tasks:[], learnTypeResult:null, materials:[], cards:[] };
+  return { version:1, settings:{ theme:null, design:"frisch", accent:"blau", rewards:true, motion:true, tutorialDone:false, features:{ countdown:true, lerntyp:true, lernmittel:true } },
+           exams:[], tasks:[], learnTypeResult:null, materials:[], cards:[], stats:{ days:[] } };
 }
 function loadData(){
   try{ const raw = localStorage.getItem(STORAGE_KEY);
@@ -489,6 +532,46 @@ document.getElementById("btnTheme").onclick = () => {
 applyTheme();
 
 /* =====================================================
+   KERN: Symbole (SVG, Strichstärke 2, Farbe = Textfarbe)
+   icon(name, size) liefert ein Element; <i data-ic="name"> im HTML wird beim Start gefüllt.
+   Es werden nur feste Symbole eingesetzt, keine Nutzereingaben.
+   ===================================================== */
+const ICONS = {
+  menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
+  contrast:'<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>',
+  home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
+  calendar:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  compass:'<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>',
+  folder:'<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+  sliders:'<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>',
+  note:'<path d="M7 3h7l5 5v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',
+  image:'<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-8 8"/>',
+  pdf:'<path d="M7 3h7l5 5v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M14 3v5h5"/><text x="12" y="17.5" text-anchor="middle" font-size="6" font-weight="700" fill="currentColor" stroke="none">PDF</text>',
+  link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+  cards:'<rect x="3" y="7" width="14" height="13" rx="2.5"/><path d="M7 7V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/>',
+  lock:'<rect x="5" y="11" width="14" height="9" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+  palette:'<path d="M12 3a9 9 0 1 0 0 18c1.5 0 2-1 1.4-2.1-.7-1.2.1-2.4 1.5-2.4H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11" r="1.1"/><circle cx="10" cy="7" r="1.1"/><circle cx="15" cy="7.5" r="1.1"/>',
+  target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/>',
+  sparkle:'<path d="M11 3l1.9 5.1L18 10l-5.1 1.9L11 17l-1.9-5.1L4 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',
+  disk:'<path d="M5 3h11l3 3v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M7 3v5h8V3M7 21v-7h10v7"/>',
+  left:'<path d="M15 5l-7 7 7 7"/>',
+  right:'<path d="M9 5l7 7-7 7"/>',
+  x:'<path d="M6 6l12 12M18 6L6 18"/>',
+  flame:'<path d="M12 3c1 3.5 5 5.6 5 10a5 5 0 0 1-10 0c0-2.6 1.5-4.1 2.5-5 .3 1.5 1 2.5 2 3 .4-3-1-5.6.5-8z"/>',
+  trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8 21h8M9 17h6"/>',
+  check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>'
+};
+function iconSvg(name){
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICONS[name] || "") + '</svg>';
+}
+function icon(name, size){
+  const e = document.createElement("span"); e.className = "ic"; e.innerHTML = iconSvg(name);
+  if(size){ e.style.width = size + "px"; e.style.height = size + "px"; }
+  return e;
+}
+document.querySelectorAll("[data-ic]").forEach(e => { e.classList.add("ic"); e.innerHTML = iconSvg(e.dataset.ic); });
+
+/* =====================================================
    KERN: Farben und Design
    Palette: Akzentfarbe der App und Farbe pro Prüfung (Lernmittel und Karten übernehmen sie).
    Designs: "frisch" (farbig, lebendig) und "ruhig" (sachlich, wenig Farbe), unabhängig von Hell/Dunkel.
@@ -513,9 +596,10 @@ const Look = (() => {
   function apply(){
     const s = data.settings, root = document.documentElement, k = PALETTE_KEYS.includes(s.accent) ? s.accent : "blau";
     root.dataset.look = s.design === "ruhig" ? "ruhig" : "frisch";
+    root.dataset.motion = s.motion === false ? "off" : "on";
     root.style.setProperty("--accent", "var(--pc-" + k + ")"); root.style.setProperty("--accent-text", "var(--pt-" + k + ")");
   }
-  function build(box){   // Auswahl für Design, Akzentfarbe und Helligkeit
+  function build(box, full){   // Auswahl für Design, Akzentfarbe und Helligkeit (full: auch Belohnungen und Animationen)
     box.textContent = ""; const s = data.settings;
     const label = t => { const l = document.createElement("small"); l.textContent = t; l.style.cssText = "display:block;color:var(--muted);margin:12px 0 6px"; box.appendChild(l); };
     const seg = (items, current, onPick) => {
@@ -523,7 +607,7 @@ const Look = (() => {
       items.forEach(([v, text]) => { const b = document.createElement("button"); b.type = "button"; b.textContent = text; b.setAttribute("aria-pressed", v === current); b.onclick = () => onPick(v); d.appendChild(b); });
       box.appendChild(d);
     };
-    const redo = () => { saveData(); apply(); applyTheme(); build(box); };
+    const redo = () => { saveData(); apply(); applyTheme(); build(box, full); };
     label("Design");
     seg(DESIGNS.map(d => [d[0], d[1]]), s.design === "ruhig" ? "ruhig" : "frisch", v => { s.design = v; redo(); });
     const hint = document.createElement("p"); hint.className = "lt-desc"; hint.style.marginTop = "6px";
@@ -538,10 +622,50 @@ const Look = (() => {
     box.appendChild(sw);
     label("Helligkeit");
     seg(THEMES, s.theme || null, v => { s.theme = v; redo(); });
+    if(full){
+      label("Belohnungen (Lernserie und Erfolgsmeldungen)");
+      seg([[true, "An"], [false, "Aus"]], s.rewards !== false, v => { s.rewards = v; redo(); });
+      label("Animationen");
+      seg([[true, "An"], [false, "Aus"]], s.motion !== false, v => { s.motion = v; redo(); });
+    }
   }
   return { apply, build };
 })();
 Look.apply();
+
+/* =====================================================
+   KERN: Belohnungen (Lernserie und kurze Erfolgsmeldungen)
+   Ein Lerntag zählt, sobald man eine Karte übt oder eine Aufgabe abschließt.
+   data.stats.days = Liste der Lerntage (JJJJ-MM-TT, höchstens 90).
+   Mit settings.rewards = false werden keine Meldungen gezeigt.
+   ===================================================== */
+const Rewards = (() => {
+  const pad = v => String(v).padStart(2, "0");
+  const iso = d => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+  const on = () => data.settings.rewards !== false;
+  function streak(){   // Tage in Folge bis heute (oder bis gestern, wenn heute noch nicht gelernt)
+    const days = new Set(data.stats.days), d = new Date(), today = days.has(iso(d));
+    if(!today) d.setDate(d.getDate() - 1);
+    let n = 0;
+    while(days.has(iso(d))){ n++; d.setDate(d.getDate() - 1); }
+    return { n, today };
+  }
+  let timer = null;
+  function toast(text, ic){
+    if(!on()) return;
+    const t = document.getElementById("toast"); t.textContent = "";
+    t.append(icon(ic || "check", 22), document.createTextNode(text));
+    t.hidden = true; void t.offsetWidth; t.hidden = false;   // Animation neu starten
+    clearTimeout(timer); timer = setTimeout(() => { t.hidden = true; }, 2800);
+  }
+  function activity(msg){   // Lernaktivität melden: Serie zählen, ggf. kurz loben
+    const t = iso(new Date()), isNew = !data.stats.days.includes(t);
+    if(isNew){ data.stats.days.push(t); data.stats.days = data.stats.days.slice(-90); saveData(); }
+    if(isNew){ const n = streak().n; toast(n > 1 ? "Lernserie: " + n + " Tage in Folge" : "Erster Lerntag geschafft", "flame"); }
+    else if(msg) toast(msg, "check");
+  }
+  return { on, streak, toast, activity };
+})();
 
 /* =====================================================
    KERN: Navigation (Tabs)
@@ -554,7 +678,7 @@ function showView(name){
   setMenu(false);
   if(name === "home") Home.render();
   if(name === "lernmittel") Lernmittel.render();
-  if(name === "settings"){ Backup.render(); Look.build(document.getElementById("lookBox")); }
+  if(name === "settings"){ Backup.render(); Look.build(document.getElementById("lookBox"), true); }
   window.scrollTo(0,0);
 }
 document.querySelectorAll(".tab").forEach(t => t.onclick = () => showView(t.dataset.view));
@@ -658,30 +782,30 @@ function askConfirm(text, okLabel){
    Erscheint beim ersten Start; über "?" jederzeit wieder.
    ===================================================== */
 const TUT_STEPS = [
-  { icon:"👋", title:"Willkommen!", text:"Diese App hilft dir, dich ruhig und klar auf Prüfungen vorzubereiten. Das dauert nur eine Minute." },
-  { icon:"⏳", title:"Countdown", text:"Trage deine Prüfungen ein. Du siehst, wie viele Tage noch bleiben, und bekommst einen einfachen Lernplan." },
-  { icon:"🧭", title:"Lerntyp", text:"Beantworte ein paar Fragen. Du erfährst, wie du lernst, und bekommst Tipps, die zu dir passen." },
-  { icon:"🗂️", title:"Lernmittel", text:"Sammle Notizen, Bilder und PDFs und ordne sie deinen Prüfungen zu. Daraus kannst du Lernkarten machen." },
-  { icon:"🔒", title:"Deine Daten", text:"Alles bleibt auf deinem Gerät. Es gibt kein Konto. Mit dem ? oben siehst du diese Einführung wieder." },
-  { icon:"🎨", title:"Wie soll die App aussehen?", look:true,
+  { icon:"sparkle", title:"Willkommen!", text:"Diese App hilft dir, dich ruhig und klar auf Prüfungen vorzubereiten. Das dauert nur eine Minute." },
+  { icon:"calendar", title:"Countdown", text:"Trage deine Prüfungen ein. Du siehst, wie viele Tage noch bleiben, und bekommst einen einfachen Lernplan." },
+  { icon:"compass", title:"Lerntyp", text:"Beantworte ein paar Fragen. Du erfährst, wie du lernst, und bekommst Tipps, die zu dir passen." },
+  { icon:"folder", title:"Lernmittel", text:"Sammle Notizen, Bilder und PDFs und ordne sie deinen Prüfungen zu. Daraus kannst du Lernkarten machen." },
+  { icon:"lock", title:"Deine Daten", text:"Alles bleibt auf deinem Gerät. Es gibt kein Konto. Mit dem ? oben siehst du diese Einführung wieder." },
+  { icon:"palette", title:"Wie soll die App aussehen?", look:true,
     text:"Wähle ein Design und eine Farbe. Beides lässt sich später in den Einstellungen ändern." },
-  { icon:"🎯", title:"Was brauchst du?", features:true,
+  { icon:"target", title:"Was brauchst du?", features:true,
     text:"Wähle, was du nutzen möchtest. Alles andere blendet die App aus. Du kannst das später über das ? ändern. Beim ersten Mal folgt danach ein kurzer Rundgang durch die App." }
 ];
 const FEATURES = [   // [Schlüssel, Titel, Beschreibung]
-  ["countdown", "⏳ Prüfungen und Lernplan", "Countdown und Lernaufgaben-Board"],
-  ["lerntyp", "🧭 Lerntyp-Test", "Fragen und passende Tipps"],
-  ["lernmittel", "🗂️ Lernmittel", "Notizen, Bilder, PDFs, Lernkarten"]
+  ["countdown", "Prüfungen und Lernplan", "Countdown und Lernaufgaben-Board", "calendar"],
+  ["lerntyp", "Lerntyp-Test", "Fragen und passende Tipps", "compass"],
+  ["lernmittel", "Lernmittel", "Notizen, Bilder, PDFs, Lernkarten", "folder"]
 ];
 function renderFeatures(){
   const box = document.getElementById("tutFeatures"); box.textContent = "";
-  FEATURES.forEach(([key, title, desc]) => {
+  FEATURES.forEach(([key, title, desc, ic]) => {
     const label = document.createElement("label"); label.className = "featrow";
     const cb = document.createElement("input"); cb.type = "checkbox"; cb.checked = !!tutSel[key];
     cb.onchange = () => { tutSel[key] = cb.checked; document.getElementById("tutErr").textContent = ""; };
     const d = document.createElement("div"), b = document.createElement("b"), sm = document.createElement("small");
     b.textContent = title; sm.textContent = desc; d.append(b, sm);
-    label.append(cb, d); box.appendChild(label);
+    label.append(cb, icon(ic, 22), d); box.appendChild(label);
   });
 }
 let tutStep = 0, tutSel = {};
@@ -689,7 +813,7 @@ const tut = document.getElementById("tutorial");
 
 function renderTut(){
   const s = TUT_STEPS[tutStep];
-  document.getElementById("tutIcon").textContent = s.icon;
+  const ti = document.getElementById("tutIcon"); ti.textContent = ""; ti.appendChild(icon(s.icon, 48));
   document.getElementById("tutTitle").textContent = s.title;
   document.getElementById("tutText").textContent = s.text;
   document.getElementById("tutDots").innerHTML = TUT_STEPS.map((_,i) => `<i class="${i===tutStep?"on":""}"></i>`).join("");
@@ -881,6 +1005,7 @@ const Countdown = (() => {
   function moveTask(t, step){
     t.status = COLS[COLS.findIndex(c => c[0] === t.status) + step][0];
     saveData(); renderPlan();
+    if(t.status === "done") Rewards.activity("Aufgabe geschafft");
   }
   function renderPlan(){
     const ex = data.exams.find(e => e.id === planExamId);
@@ -897,8 +1022,9 @@ const Countdown = (() => {
     const pm = $("planMat"); pm.textContent = "";
     pm.appendChild(el("small", "", "Lernmaterial zu dieser Prüfung"));
     const mrow = el("div", "actions"); mrow.style.margin = "6px -12px -10px";
-    mrow.appendChild(button("ghost", "🗂️ Lernmittel (" + nMat + ")", () => Lernmittel.showFor(ex.id, "material")));
-    if(nCards) mrow.appendChild(button("ghost", "🃏 Karten üben (" + nCards + ")", () => Lernkarten.practiceExam(ex.id)));
+    const iconBtn = (name, label, fn) => { const b = button("ghost", " " + label, fn); b.prepend(icon(name, 18)); return b; };
+    mrow.appendChild(iconBtn("folder", "Lernmittel (" + nMat + ")", () => Lernmittel.showFor(ex.id, "material")));
+    if(nCards) mrow.appendChild(iconBtn("cards", "Karten üben (" + nCards + ")", () => Lernkarten.practiceExam(ex.id)));
     mrow.appendChild(button("ghost", "+ Hinzufügen", () => { showView("lernmittel"); Lernmittel.add(ex.id); }));
     pm.appendChild(mrow);
 
@@ -919,9 +1045,10 @@ const Countdown = (() => {
       txt.appendChild(el("span", "", t.title));
       if(t.date) txt.appendChild(el("small", "", dateOf(t.date).toLocaleDateString("de-DE", { weekday:"short", day:"numeric", month:"short" })));
       const btns = el("div", "btns"), idx = COLS.findIndex(c => c[0] === t.status);
-      if(idx > 0) btns.appendChild(button("mini", "←", () => moveTask(t, -1), "Zurück nach " + COLS[idx-1][1]));
-      if(idx < 2) btns.appendChild(button("mini", "→", () => moveTask(t, 1), "Weiter nach " + COLS[idx+1][1]));
-      btns.appendChild(button("mini", "✕", () => { data.tasks = data.tasks.filter(x => x.id !== t.id); saveData(); renderPlan(); }, "Aufgabe löschen"));
+      const mb = (name, fn, aria) => { const b = button("mini", "", fn, aria); b.appendChild(icon(name, 18)); return b; };
+      if(idx > 0) btns.appendChild(mb("left", () => moveTask(t, -1), "Zurück nach " + COLS[idx-1][1]));
+      if(idx < 2) btns.appendChild(mb("right", () => moveTask(t, 1), "Weiter nach " + COLS[idx+1][1]));
+      btns.appendChild(mb("x", () => { data.tasks = data.tasks.filter(x => x.id !== t.id); saveData(); renderPlan(); }, "Aufgabe löschen"));
       card.append(txt, btns); list.appendChild(card);
     });
   }
@@ -968,20 +1095,28 @@ const Home = (() => {
     const last = data.settings.lastBackup, age = last ? (Date.now() - new Date(last)) / 864e5 : Infinity;
     if(!any || age < 14) return;
     const c = h("div", "card");
-    c.append(h("b", "", "💾 Tipp: Backup erstellen"),
+    const hb = h("b", "", " Tipp: Backup erstellen"); hb.prepend(icon("disk", 18));
+    c.append(hb,
       h("p", "lt-desc", last ? "Dein letztes Backup ist älter als 14 Tage." : "Sichere deine Daten, falls der Browser den Speicher leert."));
     const b = h("button", "ghost", "Zum Backup"); b.style.padding = "10px 0 0"; b.onclick = () => showView("settings");
     c.appendChild(b); $("homeBox").appendChild(c);
   }
   function render(){ renderMain(); backupHint(); }
+  function bar(frac){
+    const b = h("div", "bar"), f = h("i"); f.style.width = Math.round(frac * 100) + "%"; b.appendChild(f); return b;
+  }
   function renderMain(){
     const box = $("homeBox"); box.textContent = "";
     $("homeSub").textContent = new Date().toLocaleDateString("de-DE", { weekday:"long", day:"numeric", month:"long" });
-    if(!data.settings.features.countdown) return;
-    const today = C.todayIso();
-    const upcoming = data.exams.filter(e => C.daysUntil(e.date) >= 0).sort((a,b) => a.date.localeCompare(b.date));
+    const f = data.settings.features, today = C.todayIso();
+    const upcoming = f.countdown ? data.exams.filter(e => C.daysUntil(e.date) >= 0).sort((a,b) => a.date.localeCompare(b.date)) : [];
+    if(f.countdown){ nextExam(box, upcoming); if(upcoming.length){ moreExams(box, upcoming); todayCard(box, upcoming, today); } }
+    overview(box, upcoming);
+    lerntypLink();
+  }
 
-    // Keine anstehende Prüfung -> Einladung
+  /* Nächste Prüfung (oder Einladung, wenn es keine gibt) */
+  function nextExam(box, upcoming){
     if(!upcoming.length){
       const c = h("div", "card empty");
       c.appendChild(h("p", "", data.exams.length ? "Keine anstehende Prüfung." : "Du hast noch keine Prüfung eingetragen."));
@@ -989,8 +1124,6 @@ const Home = (() => {
       b.onclick = () => { showView("countdown"); C.startAdd(); };
       c.appendChild(b); box.appendChild(c); return;
     }
-
-    // Nächste Prüfung
     const ex = upcoming[0], t = C.dayText(C.daysUntil(ex.date)), tk = data.tasks.filter(x => x.examId === ex.id);
     const card = h("div", "card"), top = h("div", "exam"), left = h("div");
     card.style.borderLeft = "var(--bar,6px) solid var(--pc-" + examKey(ex) + ")";
@@ -998,13 +1131,33 @@ const Home = (() => {
       h("small", "", C.dateOf(ex.date).toLocaleDateString("de-DE", { weekday:"long", day:"numeric", month:"long" })));
     const right = h("div", "days", t.big); right.appendChild(h("small", "", t.small));
     top.append(left, right); card.appendChild(top);
-    if(tk.length) card.appendChild(h("p", "prog", tk.filter(x => x.status === "done").length + " von " + tk.length + " Aufgaben geschafft"));
+    if(tk.length){
+      const done = tk.filter(x => x.status === "done").length;
+      card.append(h("p", "prog", done + " von " + tk.length + " Aufgaben geschafft"), bar(done / tk.length));
+    }
     const hint = h("p", "prog", "Tippen für den Lernplan ›"); hint.style.color = "var(--accent)";
     card.appendChild(hint);
     makeTappable(card, () => C.openPlan(ex.id), "Lernplan von " + ex.subject + " öffnen");
     box.appendChild(card);
+  }
 
-    // Heute dran: offene Aufgaben mit Datum heute oder früher
+  /* Die zwei Prüfungen danach, kurz */
+  function moreExams(box, upcoming){
+    const more = upcoming.slice(1, 3);
+    if(!more.length) return;
+    const c = h("div", "card"); c.appendChild(h("h3", "", "Danach"));
+    more.forEach(ex => {
+      const n = C.daysUntil(ex.date), r = h("button", "taskrow");
+      r.append(examDot(ex.id), document.createTextNode(ex.subject));
+      r.appendChild(h("small", "", C.dateOf(ex.date).toLocaleDateString("de-DE", { weekday:"short", day:"numeric", month:"short" }) +
+        " · " + (n === 0 ? "heute" : n === 1 ? "morgen" : "in " + n + " Tagen")));
+      r.onclick = () => C.openPlan(ex.id); c.appendChild(r);
+    });
+    box.appendChild(c);
+  }
+
+  /* Heute dran: offene Aufgaben mit Datum heute oder früher */
+  function todayCard(box, upcoming, today){
     const ids = upcoming.map(e => e.id);
     const todo = data.tasks.filter(x => x.status !== "done" && x.date && x.date <= today && ids.includes(x.examId))
                            .sort((a,b) => a.date.localeCompare(b.date));
@@ -1022,6 +1175,55 @@ const Home = (() => {
       c2.appendChild(r);
     });
     box.appendChild(c2);
+  }
+
+  /* Lernstand: Aufgaben, Lernmittel, Lernkarten und "Weiterlernen" */
+  function overview(box, upcoming){
+    const f = data.settings.features, tiles = [];
+    if(Rewards.on()){
+      const st = Rewards.streak();
+      tiles.push(["Lernserie", st.n + (st.n === 1 ? " Tag" : " Tage"),
+        st.today ? "heute schon gelernt" : st.n ? "heute lernen, dann läuft sie weiter" : "heute lernen und starten",
+        null, () => { if(f.lernmittel && data.cards.some(c => !c.archived)) Lernkarten.practiceOpen(); }, "flame"]);
+    }
+    if(f.countdown){
+      const ids = new Set(upcoming.map(e => e.id)), tk = data.tasks.filter(x => ids.has(x.examId));
+      if(tk.length){
+        const done = tk.filter(x => x.status === "done").length;
+        tiles.push(["Aufgaben", done + " von " + tk.length, "geschafft", done / tk.length, () => C.openPlan(upcoming[0].id)]);
+      }
+    }
+    if(f.lernmittel){
+      const m = data.materials.length, n = data.cards.length, kn = data.cards.filter(c => c.archived).length;
+      tiles.push(["Lernmittel", String(m), m === 1 ? "Eintrag" : "Einträge", null, () => { Lernmittel.setPane("material"); showView("lernmittel"); }]);
+      tiles.push(["Lernkarten", n ? kn + " von " + n : "0", n ? "gelernt" : "Karten", n ? kn / n : null, () => { Lernmittel.setPane("cards"); showView("lernmittel"); }]);
+    }
+    if(!tiles.length) return;
+    const c = h("div", "card"); c.appendChild(h("h3", "", "Dein Lernstand"));
+    const grid = h("div", "tiles");
+    tiles.forEach(([label, value, unit, frac, go, ic]) => {
+      const t = h("button", "tile"), val = h("b", "", value);
+      if(ic){ const i = icon(ic, 20); i.style.cssText += ";color:var(--accent);margin-right:6px"; val.prepend(i); }
+      t.append(h("small", "", label), val, h("small", "", unit));
+      if(frac !== null) t.appendChild(bar(frac));
+      t.onclick = go; grid.appendChild(t);
+    });
+    c.appendChild(grid);
+    const open = f.lernmittel ? data.cards.filter(x => !x.archived).length : 0;
+    if(open){
+      const b = h("button", "primary", "Weiterlernen (" + open + (open === 1 ? " Karte" : " Karten") + ")");
+      b.style.cssText = "width:100%;margin-top:12px"; b.onclick = () => Lernkarten.practiceOpen(); c.appendChild(b);
+    }
+    box.appendChild(c);
+  }
+
+  /* Kurzlink zum Lerntyp: zeigt das Ergebnis, wenn es schon eines gibt */
+  function lerntypLink(){
+    const btn = document.querySelector('[data-go="lerntyp"]');
+    if(!btn) return;
+    const sum = LernTest.summary();
+    btn.querySelector("b").textContent = sum ? "Dein Lernzugang" : "Lerntyp herausfinden";
+    btn.querySelector("small").textContent = sum || "Wie lernst du am besten?";
   }
   function goAdd(k){   // direkt zum Formular der gewählten Art
     $("addSheet").hidden = true;
@@ -1270,7 +1472,7 @@ const LernTest = (() => {
   }
   function init(){ render(); }
   function reset(){ running = false; render(); }   // für den Rundgang
-  return { init, reset };
+  return { init, reset, summary: () => data.learnTypeResult ? headline(data.learnTypeResult.types).title : null };
 })();
 
 /* =====================================================
@@ -1287,7 +1489,7 @@ const Lernmittel = (() => {
   const $ = id => document.getElementById(id);
   const MAX_BYTES = 25 * 1024 * 1024;   // größte erlaubte Datei
   const MAX_EDGE = 1600;                // Bilder werden auf diese Kantenlänge verkleinert
-  const KINDS = [["note", "Notiz", "📝"], ["image", "Bild", "🖼️"], ["pdf", "PDF", "📄"], ["link", "Link", "🔗"]];
+  const KINDS = [["note", "Notiz", "note"], ["image", "Bild", "image"], ["pdf", "PDF", "pdf"], ["link", "Link", "link"]];   // [Art, Name, Symbol]
   let kind = "note", saving = false, viewerUrl = null;
   let pane = "material";   // E9: "material" oder "cards" (Lernkarten)
   let filter = "all", editingId = null;   // E8: gewählter Filter, Lernmittel im Bearbeiten-Modus
@@ -1342,16 +1544,16 @@ const Lernmittel = (() => {
       fr.readAsDataURL(blob);
     });
   }
-  async function shrinkImage(file){   // als JPEG mit höchstens MAX_EDGE Pixeln speichern
+  async function shrinkImage(file, edge = MAX_EDGE, quality = 0.82){   // als JPEG mit höchstens MAX_EDGE Pixeln speichern
     const url = await toDataUrl(file);
     const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error("decode")); i.src = url; });
-    const k = Math.min(1, MAX_EDGE / Math.max(img.width, img.height));
+    const k = Math.min(1, edge / Math.max(img.width, img.height));
     const c = document.createElement("canvas");
     c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
     const ctx = c.getContext("2d");
     ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, c.width, c.height);   // weißer Grund für PNG mit Transparenz
     ctx.drawImage(img, 0, 0, c.width, c.height);
-    return new Promise((res, rej) => c.toBlob(b => b ? res(b) : rej(new Error("decode")), "image/jpeg", 0.82));
+    return new Promise((res, rej) => c.toBlob(b => b ? res(b) : rej(new Error("decode")), "image/jpeg", quality));
   }
 
   /* ---- Formular ---- */
@@ -1427,6 +1629,7 @@ const Lernmittel = (() => {
       else {
         const blob = kind === "image" ? await shrinkImage(file) : file;
         await putFile(m.id, blob);
+        if(kind === "image") m.thumb = await toDataUrl(await shrinkImage(blob, 128, 0.6));   // kleine Vorschau für die Liste
         m.fileName = file.name; m.mime = blob.type || file.type; m.size = blob.size;
       }
       data.materials.push(m); saveData();
@@ -1463,6 +1666,14 @@ const Lernmittel = (() => {
     pane = k; $("lmMaterialPane").hidden = k !== "material"; $("lmCardsPane").hidden = k !== "cards";
     renderTabs(); if(k === "cards") Lernkarten.render();
   }
+  const thumbBusy = new Set();
+  async function ensureThumb(m){   // Vorschau für ältere Bilder nachträglich erzeugen (einmalig)
+    if(thumbBusy.has(m.id)) return; thumbBusy.add(m.id);
+    try{
+      const b = await getFile(m.id);
+      if(b){ m.thumb = await toDataUrl(await shrinkImage(b, 128, 0.6)); saveData(); if(pane === "material") render(); }
+    }catch(e){}
+  }
   function render(){
     const list = $("lmList"); list.textContent = "";
     $("lmSearchWrap").hidden = !(data.materials.length || data.cards.length);
@@ -1481,7 +1692,9 @@ const Lernmittel = (() => {
       const meta = h("small", "", where + (m.size ? " · " + fmtSize(m.size) : m.url ? " · " + hostOf(m.url) : "")), dot = examDot(m.examId);
       if(dot) meta.prepend(dot);
       info.append(h("h3", "", m.title), meta);
-      row.append(h("span", "ico", KINDS.find(k => k[0] === m.type)[2]), info);
+      const lead = h("span", "ico");
+      if(m.type === "image" && m.thumb){ const im = h("img", "thumb"); im.src = m.thumb; im.alt = ""; row.append(im, info); }
+      else { lead.appendChild(icon(KINDS.find(k => k[0] === m.type)[2], 26)); row.append(lead, info); if(m.type === "image") ensureThumb(m); }
       const act = h("div", "actions");
       const o = h("button", "ghost", "Öffnen"); o.onclick = () => open(m);
       const e = h("button", "ghost", "Bearbeiten"); e.onclick = () => openForm(m);
@@ -1587,7 +1800,8 @@ const Lernmittel = (() => {
 /* =====================================================
    MODUL: Lernkarten (E9: Karten aus Notizen, Übungsmodus)
    Eine Karte = { id, front, back, examId|null, subject, sourceId|null,
-                  known:true|false|null, tries, history:[{at, answer, ok}], createdAt }
+                  known:true|false|null, tries, history:[{at, answer, ok}], archived:true|false, createdAt }
+   Archiv: zweimal hintereinander gewusst = gelernt (archived); einmal nicht gewusst = wieder zu lernen.
    Sie erscheinen im Lernmittel-Tab unter "Lernkarten".
    Notizen erzeugen Karten über Lernkarten.quickForm(notiz).
    E10 verknüpft Karten mit dem Countdown.
@@ -1605,6 +1819,7 @@ const Lernkarten = (() => {
     b.appendChild(i); return b;
   }
   let filter = "all", queue = [], idx = 0, flipped = false, knownCount = 0, wrong = [], myAnswer = "";
+  let view = "open", archivedNow = 0;   // Liste: "open" (zu lernen) oder "archive"; neu archivierte Karten in dieser Übung
 
   function create(front, back, examId, subject, sourceId){
     data.cards.push({ id:newId(), front, back, examId:examId || null, subject:examId ? "" : (subject || ""),
@@ -1693,20 +1908,30 @@ const Lernkarten = (() => {
     const exSubj = c => { const e = c.examId && data.exams.find(x => x.id === c.examId); return e ? e.subject : ""; };
     const shown = all.filter(c => filterMatch(c, filter) && searchMatch([c.front, c.back, c.subject, exSubj(c)]));
     if(!shown.length){ list.appendChild(h("div", "card empty", "Keine Treffer.")); return; }
-    const open = shown.filter(c => c.known !== true);
-    const box = h("div", "card");
-    const b1 = h("button", "primary", "Alle üben (" + shown.length + ")"); b1.style.width = "100%"; b1.onclick = () => practice(shown);
-    box.appendChild(b1);
-    if(open.length && open.length < shown.length){
-      const b2 = h("button", "ghost", "Nur noch nicht gewusste üben (" + open.length + ")"); b2.style.width = "100%";
-      b2.onclick = () => practice(open); box.appendChild(b2);
+    // Zu lernen und Archiv getrennt anzeigen
+    const toLearn = shown.filter(c => !c.archived), arch = shown.filter(c => c.archived);
+    const seg = h("div", "seg");
+    [["open", "Zu lernen (" + toLearn.length + ")"], ["archive", "Archiv (" + arch.length + ")"]].forEach(([k, label]) => {
+      const b = h("button", "", label); b.type = "button"; b.setAttribute("aria-pressed", k === view);
+      b.onclick = () => { view = k; render(); }; seg.appendChild(b);
+    });
+    pr.appendChild(seg);
+    const cur = view === "archive" ? arch : toLearn;
+    if(cur.length){
+      const box = h("div", "card");
+      const b1 = h("button", "primary", (view === "archive" ? "Archiv wiederholen (" : "Üben (") + cur.length + ")");
+      b1.style.width = "100%"; b1.onclick = () => practice(cur);
+      box.appendChild(b1); pr.appendChild(box);
+    } else {
+      list.appendChild(h("div", "card empty", view === "archive"
+        ? "Noch nichts im Archiv. Eine Karte kommt hierher, wenn du sie zweimal hintereinander gewusst hast."
+        : "Alles gelernt! Im Archiv kannst du deine Karten wiederholen."));
     }
-    pr.appendChild(box);
 
-    [...shown].sort((a,b) => b.createdAt.localeCompare(a.createdAt)).forEach(c => {
+    [...cur].sort((a,b) => b.createdAt.localeCompare(a.createdAt)).forEach(c => {
       const exam = c.examId && data.exams.find(e => e.id === c.examId);
       const where = exam ? "Prüfung: " + exam.subject : c.subject ? "Fach: " + c.subject : "Ohne Zuordnung";
-      const status = c.known === true ? "✓ gewusst" : c.known === false ? "✗ noch nicht gewusst" : "neu";
+      const status = c.archived ? "im Archiv" : c.known === true ? "✓ gewusst" : c.known === false ? "✗ noch nicht gewusst" : "neu";
       const card = h("div", "card");
       const meta = h("small", "", where + " · " + status), dot = examDot(c.examId);
       if(dot) meta.prepend(dot);
@@ -1714,11 +1939,13 @@ const Lernkarten = (() => {
       card.lastChild.style.cssText = "display:block;color:var(--muted);margin-top:8px";
       if((c.history || []).length) card.appendChild(historyView(c));
       const act = h("div", "actions"), d = h("button", "ghost danger", "Löschen");
+      const mv = h("button", "ghost", c.archived ? "Wieder lernen" : "Ins Archiv");
+      mv.onclick = () => { c.archived = !c.archived; saveData(); render(); };
       d.onclick = async () => {
         if(!(await askConfirm("Diese Lernkarte löschen?", "Löschen"))) return;
         data.cards = data.cards.filter(x => x.id !== c.id); saveData(); Lernmittel.renderTabs(); render();
       };
-      act.appendChild(d); card.appendChild(act); list.appendChild(card);
+      act.append(mv, d); card.appendChild(act); list.appendChild(card);
     });
   }
 
@@ -1726,7 +1953,7 @@ const Lernkarten = (() => {
   function shuffle(a){ for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
   function practice(list){
     if(!list.length) return;
-    queue = shuffle([...list]); idx = 0; flipped = false; knownCount = 0; wrong = []; myAnswer = "";
+    queue = shuffle([...list]); idx = 0; flipped = false; knownCount = 0; wrong = []; myAnswer = ""; archivedNow = 0;
     $("viewerTitle").textContent = "Üben"; $("viewer").hidden = false; showCard();
   }
   function answer(ok){
@@ -1734,7 +1961,12 @@ const Lernkarten = (() => {
     c.history = c.history || [];
     c.history.push({ at:new Date().toISOString(), answer:myAnswer, ok });   // Verlauf: eigene Antwort und Ergebnis
     if(c.history.length > 30) c.history.shift();
+    // Archiv: zweimal hintereinander gewusst -> gelernt; nicht gewusst -> wieder zu lernen
+    const last2 = c.history.slice(-2);
+    if(!ok) c.archived = false;
+    else if(!c.archived && last2.length === 2 && last2.every(x => x.ok)){ c.archived = true; archivedNow++; }
     myAnswer = ""; saveData();
+    Rewards.activity(null);   // zählt den Lerntag
     if(ok) knownCount++; else wrong.push(c);
     idx++; flipped = false; showCard();
   }
@@ -1746,7 +1978,7 @@ const Lernkarten = (() => {
     const card = h("div", "card");
     card.appendChild(h("small", "", flipped ? "Antwort" : "Frage"));
     if(flipped) card.appendChild(h("p", "lt-desc", "Frage: " + c.front));
-    card.appendChild(h("div", "flash", flipped ? c.back : c.front));
+    card.appendChild(h("div", flipped ? "flash flip" : "flash", flipped ? c.back : c.front));
     if(flipped && myAnswer){
       const mine = h("p", "lt-desc", "Deine Antwort: " + myAnswer); mine.style.whiteSpace = "pre-wrap"; card.appendChild(mine);
     }
@@ -1765,9 +1997,23 @@ const Lernkarten = (() => {
   }
   function finish(body){
     $("viewerTitle").textContent = "Geschafft";
+    const rate = queue.length ? knownCount / queue.length : 0;
+    if(Rewards.on() && (rate >= 0.8 || archivedNow)){   // Erfolgsfeld mit Konfetti
+      const cel = h("div", "celebrate"), conf = h("div", "confetti");
+      for(let i = 0; i < 16; i++){
+        const p = h("i"); p.style.left = Math.round(Math.random() * 96) + "%";
+        p.style.background = "var(--pc-" + PALETTE_KEYS[i % PALETTE_KEYS.length] + ")";
+        p.style.animationDelay = (Math.random() * 0.5).toFixed(2) + "s"; conf.appendChild(p);
+      }
+      const st = Rewards.streak().n;
+      cel.append(conf, icon("trophy", 52), h("b", "", rate === 1 ? "Perfekt!" : "Stark gemacht!"),
+        h("small", "", "Lernserie: " + st + (st === 1 ? " Tag" : " Tage")));
+      body.appendChild(cel);
+    }
     const c = h("div", "card"); c.style.textAlign = "center";
     c.append(h("h3", "", knownCount + " von " + queue.length + " gewusst"),
              h("p", "lt-desc", wrong.length ? "Übe die übrigen gleich nochmal." : "Super, du wusstest alle Karten!"));
+    if(archivedNow) c.appendChild(h("p", "lt-desc", archivedNow + (archivedNow === 1 ? " Karte ist" : " Karten sind") + " jetzt im Archiv, weil du sie zweimal hintereinander gewusst hast."));
     body.appendChild(c);
     if(wrong.length){
       const b = h("button", "primary", "Nicht gewusste nochmal (" + wrong.length + ")"); b.style.cssText = "width:100%;margin-bottom:8px";
@@ -1782,7 +2028,11 @@ const Lernkarten = (() => {
     $("ckExam").onchange = () => { $("ckSubjectWrap").hidden = !!$("ckExam").value; };
     $("ckFilter").onchange = () => { filter = $("ckFilter").value; render(); };
   }
-  return { init, render, quickForm, closeForm, setFilter: f => { filter = f; }, practiceExam: id => { const ex = data.exams.find(e => e.id === id); practice(data.cards.filter(c => inExam(c, ex))); } };
+  return { init, render, quickForm, closeForm, setFilter: f => { filter = f; }, practiceOpen: () => practice(data.cards.filter(c => !c.archived)),
+    practiceExam: id => {   // erst die Karten zum Lernen; sind alle gelernt, das Archiv
+      const ex = data.exams.find(e => e.id === id), cs = data.cards.filter(c => inExam(c, ex)), todo = cs.filter(c => !c.archived);
+      practice(todo.length ? todo : cs);
+    } };
 })();
 
 /* =====================================================
@@ -1844,6 +2094,7 @@ const Backup = (() => {
       data.exams = list("exams", okExam); data.tasks = list("tasks", okTask);
       data.materials = list("materials", okMat); data.cards = list("cards", okCard);
       data.learnTypeResult = d.learnTypeResult || null;
+      data.stats = { days:(d.stats && Array.isArray(d.stats.days) ? d.stats.days : []).filter(x => str(x) && /^\d{4}-\d{2}-\d{2}$/.test(x)).slice(-90) };
       data.settings = Object.assign(defaultData().settings, d.settings || {});
       saveData(); location.reload();
     }catch(e){
@@ -2076,7 +2327,7 @@ const Tour = (() => {
     { view:"home", target:"#homeAdd", title:"Schnell hinzufügen", preview:"add",
       text:"Mit diesem Knopf legst du eine Prüfung oder einen Lerninhalt an. Das geht von der Startseite aus immer." },
     { view:"home", menu:true, target:"#drawer", title:"Das Menü", preview:"menu",
-      text:"Mit ☰ oben links öffnest du das Menü. Am Computer steht es immer links." },
+      text:"Mit dem Menü-Symbol oben links öffnest du das Menü. Am Computer steht es immer links." },
     { view:"countdown", feature:"countdown", target:"#examNew", title:"Prüfungen eintragen", preview:"exam",
       text:"Trage Fach und Datum ein. Du siehst die Tage bis dahin und bekommst einen Lernplan mit Aufgaben zum Abhaken." },
     { view:"lerntyp", feature:"lerntyp", target:"#ltBox > *", title:"Lerntyp-Test", preview:"test",
@@ -2148,7 +2399,7 @@ const Tour = (() => {
 })();
 
 /* START */
-const APP_VERSION = "1.5 (Stand E12, Rundgang)";   // bei jedem Update hochzählen, damit man sieht, ob die neue Datei online ist
+const APP_VERSION = "1.9 (Stand E12, Belohnungen)";   // bei jedem Update hochzählen, damit man sieht, ob die neue Datei online ist
 document.getElementById("appVersion").textContent = "Version " + APP_VERSION;
 if(!storageOk()) document.getElementById("storageWarn").hidden = false;
 Countdown.init();
