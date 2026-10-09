@@ -1,7 +1,7 @@
 /* Lernen unter Prüfungsdruck – ziele.js
    Ziele & Reflexion: Lernziele setzen (planen) und nach dem Lernen zurückschauen (überwachen, anpassen).
    Ein Ziel      = { id, text, examId|null, due:"JJJJ-MM-TT"|null, done, createdAt, doneAt|null }
-   Eine Reflexion = { id, examId|null, confidence:1–5, good, change, createdAt }
+   Eine Reflexion = { id, examId|null, goalId|null, goalText, confidence:1–5, good, change, createdAt }   (goalId: Reflexion zu einem erreichten Ziel)
    Wird als normales Script geladen (Reihenfolge siehe index.html). */
 /* =====================================================
    MODUL: Ziele & Reflexion
@@ -16,7 +16,7 @@ const Ziele = (() => {
   }
   function bar(frac){ const b = h("div", "bar"), f = h("i"); f.style.width = Math.round(frac * 100) + "%"; b.appendChild(f); return b; }
   const CONF = ["sehr unsicher", "eher unsicher", "teils, teils", "eher sicher", "sehr sicher"];
-  let pane = "goals", showDone = false, conf = 3;
+  let pane = "goals", showDone = false, conf = 3, reflectGoal = null;   // reflectGoal: Ziel, zu dem gerade reflektiert wird
   const examName = id => { const ex = id && data.exams.find(e => e.id === id); return ex ? ex.subject : ""; };
   const fmt = iso => Countdown.dateOf(iso).toLocaleDateString("de-DE", { weekday:"short", day:"numeric", month:"short" });
 
@@ -56,10 +56,11 @@ const Ziele = (() => {
                       done:false, createdAt:new Date().toISOString(), doneAt:null });
     saveData(); closeGoal(); render();
   }
-  function toggle(g){
+  async function toggle(g){
     g.done = !g.done; g.doneAt = g.done ? new Date().toISOString() : null; saveData();
     if(g.done) Rewards.activity("Ziel erreicht");
     render();
+    if(g.done && await askConfirm("Ziel erreicht! Möchtest du kurz dazu reflektieren?", "Reflektieren")){ setPane("reflect"); openReflect(g.examId, g); }
   }
   function goalRow(g, today){
     const row = h("div", g.done ? "goal done" : "goal");
@@ -76,6 +77,13 @@ const Ziele = (() => {
       if(dot) sm.prepend(dot);
       if(late) sm.style.color = "#ff3b30";
       txt.appendChild(sm);
+    }
+    if(g.done){   // Reflexion zum erreichten Ziel schreiben oder ansehen
+      const rs = data.reflections.filter(r => r.goalId === g.id);
+      const rb = h("button", "ghost", rs.length ? "Reflexion ansehen (" + rs.length + ")" : "Reflexion schreiben"); rb.type = "button";
+      rb.style.cssText = "padding:6px 0;display:block";
+      rb.onclick = () => { setPane("reflect"); if(!rs.length) openReflect(g.examId, g); };
+      txt.appendChild(rb);
     }
     const del = h("button", "mini"); del.type = "button"; del.setAttribute("aria-label", "Ziel löschen"); del.appendChild(icon("x", 18));
     del.onclick = async () => {
@@ -115,17 +123,22 @@ const Ziele = (() => {
     });
     $("rfConfText").textContent = conf + " von 5: " + CONF[conf - 1];
   }
-  function openReflect(examId){
+  function openReflect(examId, goal){   // goal: optional, Reflexion zu diesem erreichten Ziel
+    reflectGoal = goal || null;
+    $("rfGoalInfo").hidden = !goal; $("rfGoalInfo").textContent = goal ? "Zum Ziel: " + goal.text : "";
+    $("rfGoodL").textContent = goal ? "Was hat dir geholfen, dein Ziel zu erreichen?" : "Was lief gut?";
+    $("rfChangeL").textContent = goal ? "Was machst du beim nächsten Ziel anders?" : "Was machst du beim nächsten Mal anders?";
     fillExamSelect($("rfExam")); $("rfExam").value = examId || "";
     $("rfGood").value = ""; $("rfChange").value = ""; $("rfError").textContent = "";
     conf = 3; renderConf();
     $("rfForm").hidden = false; $("rfNew").hidden = true; $("rfGood").focus();
   }
-  function closeReflect(){ $("rfForm").hidden = true; $("rfNew").hidden = false; }
+  function closeReflect(){ $("rfForm").hidden = true; $("rfNew").hidden = false; reflectGoal = null; }
   function saveReflect(){
     const good = $("rfGood").value.trim(), change = $("rfChange").value.trim();
     if(!good && !change){ $("rfError").textContent = "Schreib mindestens einen kurzen Satz."; $("rfGood").focus(); return; }
-    data.reflections.push({ id:newId(), examId:$("rfExam").value || null, confidence:conf, good:good.slice(0, 1000),
+    data.reflections.push({ id:newId(), examId:$("rfExam").value || null, goalId:reflectGoal ? reflectGoal.id : null,
+                            goalText:reflectGoal ? reflectGoal.text.slice(0, 200) : "", confidence:conf, good:good.slice(0, 1000),
                             change:change.slice(0, 1000), createdAt:new Date().toISOString() });
     saveData(); closeReflect(); render();
   }
@@ -143,7 +156,9 @@ const Ziele = (() => {
       const dot = examDot(r.examId); if(dot) head.prepend(dot);
       const prev = r.examId ? all.slice(i + 1).find(x => x.examId === r.examId) : null;   // ältere Reflexion zur selben Prüfung
       const s = h("p", "prog", "Sicherheit: " + r.confidence + " von 5 (" + CONF[r.confidence - 1] + ")" + (prev ? " · vorher " + prev.confidence + " von 5" : ""));
-      c.append(head, s, bar(r.confidence / 5));
+      c.append(head);
+      if(r.goalText){ const gl = h("p", "ck-back", r.goalText); gl.prepend(h("b", "", "Ziel: ")); gl.style.color = "var(--text)"; c.appendChild(gl); }
+      c.append(s, bar(r.confidence / 5));
       if(r.good){ const p = h("p", "ck-back", r.good); p.prepend(h("b", "", "Lief gut: ")); c.appendChild(p); }
       if(r.change){ const p = h("p", "ck-back", r.change); p.prepend(h("b", "", "Nächstes Mal: ")); c.appendChild(p); }
       const act = h("div", "actions"), d = h("button", "ghost danger", "Löschen");
@@ -162,6 +177,6 @@ const Ziele = (() => {
     render();
   }
   return { init, render,
-    reflect: examId => { showView("ziele"); setPane("reflect"); openReflect(examId); },   // z. B. nach einer Übung
+    reflect: (examId, goal) => { showView("ziele"); setPane("reflect"); openReflect(examId, goal); },   // z. B. nach einer Übung
     openGoals: () => data.goals.filter(g => !g.done).length };
 })();

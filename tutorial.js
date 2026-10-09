@@ -10,7 +10,7 @@ const TUT_STEPS = [
   { icon:"calendar", title:"Countdown", text:"Trage deine Prüfungen ein. Du siehst, wie viele Tage noch bleiben, und bekommst einen einfachen Lernplan." },
   { icon:"compass", title:"Lerntyp", text:"Beantworte ein paar Fragen. Du erfährst, wie du lernst, und bekommst Tipps, die zu dir passen." },
   { icon:"folder", title:"Lernmittel", text:"Sammle Notizen, Bilder und PDFs und ordne sie deinen Prüfungen zu. Daraus kannst du Lernkarten machen." },
-  { icon:"flag", title:"Ziele & Reflexion", text:"Setze dir Lernziele und hake sie ab. Nach dem Lernen schaust du kurz zurück: Was lief gut, was machst du anders?" },
+  { icon:"flag", title:"Ziele & Reflexion", text:"Setze dir Lernziele und hake sie ab. Zu einem erreichten Ziel kannst du direkt reflektieren: Was hat geholfen, was machst du anders?" },
   { icon:"timer", title:"Fokus-Timer", text:"Lerne in Blöcken von 25 Minuten und mache danach eine Pause. Die App zählt deine Lernzeit." },
   { icon:"search", title:"Nachschlagen", text:"Schlage Begriffe bei Wikipedia nach und speichere die Zusammenfassung als Notiz." },
   { icon:"lock", title:"Deine Daten", text:"Alles bleibt auf deinem Gerät. Es gibt kein Konto. Mit dem „?“ oben rechts siehst du diese Einführung wieder." },

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Lernen unter Prüfungsdruck</title>
-<link rel="stylesheet" href="style.css?v=2.6">
+<link rel="stylesheet" href="style.css?v=3.1">
 </head>
 <body>
 
@@ -102,6 +102,24 @@
     </div>
     <div id="lmCardsPane" hidden>
       <button class="primary" id="ckNew" style="margin-bottom:12px">+ Neue Lernkarte</button>
+      <button class="ghost" id="tkNew" style="margin:0 0 12px 8px">Aus Text erstellen</button>
+      <div class="card" id="tkForm" hidden>
+        <h3>Karten aus Text erstellen</h3>
+        <p class="lt-desc" style="margin-bottom:12px">Wähle zuerst, was die App erkennen soll, und füge dann einen Text ein, zum Beispiel ein Arbeitsblatt oder Karten, die eine KI geschrieben hat.</p>
+        <div id="tkModeBox"></div>
+        <div class="field"><label for="tkText">Text</label><textarea id="tkText" maxlength="30000" style="min-height:140px" placeholder="Was ist ein Zähler? ; Die obere Zahl eines Bruchs&#10;Nenner: Die untere Zahl eines Bruchs&#10;3 + 4 = 7&#10;E = mc²"></textarea></div>
+        <div class="field"><label for="tkExam">Zu welcher Prüfung gehören die Karten?</label><select id="tkExam"></select></div>
+        <div class="field" id="tkSubjectWrap"><label for="tkSubject">Fach (optional)</label><input type="text" id="tkSubject" maxlength="60" autocomplete="off"></div>
+        <button class="primary" id="tkGo">Karten erkennen</button>
+        <button class="ghost" id="tkCancel">Schließen</button>
+        <div id="tkResult"></div>
+        <details style="margin-top:14px">
+          <summary style="color:var(--accent);cursor:pointer;padding:6px 0">Vorlage für eine KI (zum Beispiel Gemini)</summary>
+          <p class="lt-desc" style="margin:6px 0 10px">Kopiere die Vorlage, hänge deinen Lerntext an und lass die KI Karten schreiben. Das Ergebnis fügst du oben ein. Gib dabei keine persönlichen Daten in KI-Dienste ein.</p>
+          <textarea id="tkTemplate" readonly style="min-height:120px"></textarea>
+          <button class="ghost" id="tkCopy" style="padding-left:0">Vorlage kopieren</button><span class="lt-desc" id="tkCopyMsg"></span>
+        </details>
+      </div>
       <div class="card" id="ckForm" hidden>
         <div class="field"><label for="ckFront">Frage (Vorderseite)</label><textarea id="ckFront" maxlength="500" style="min-height:80px"></textarea></div>
         <div class="field"><label for="ckBack">Antwort (Rückseite)</label><textarea id="ckBack" maxlength="1000" style="min-height:80px"></textarea></div>
@@ -140,10 +158,11 @@
     <div id="zgReflect" hidden>
       <button class="primary" id="rfNew" style="margin-bottom:12px">+ Neue Reflexion</button>
       <div class="card" id="rfForm" hidden>
+        <p class="lt-desc" id="rfGoalInfo" hidden style="margin:0 0 12px;color:var(--text);font-weight:600"></p>
         <div class="field"><label for="rfExam">Worauf bezieht sie sich?</label><select id="rfExam"></select></div>
         <div class="field"><label>Wie sicher fühlst du dich?</label><div class="seg" id="rfConf" style="margin-bottom:0"></div><p class="lt-desc" id="rfConfText" style="margin:6px 0 0"></p></div>
-        <div class="field"><label for="rfGood">Was lief gut?</label><textarea id="rfGood" maxlength="1000" style="min-height:70px"></textarea></div>
-        <div class="field"><label for="rfChange">Was machst du beim nächsten Mal anders?</label><textarea id="rfChange" maxlength="1000" style="min-height:70px"></textarea></div>
+        <div class="field"><label for="rfGood" id="rfGoodL">Was lief gut?</label><textarea id="rfGood" maxlength="1000" style="min-height:70px"></textarea></div>
+        <div class="field"><label for="rfChange" id="rfChangeL">Was machst du beim nächsten Mal anders?</label><textarea id="rfChange" maxlength="1000" style="min-height:70px"></textarea></div>
         <p class="error" id="rfError" role="alert"></p>
         <button class="primary" id="rfSave">Reflexion speichern</button>
         <button class="ghost" id="rfCancel">Abbrechen</button>
@@ -343,21 +362,22 @@
 </div>
 
 <!-- Die Scripte werden in dieser Reihenfolge geladen; spätere nutzen Funktionen der früheren. -->
-<script src="core.js?v=2.6"></script>
-<script src="tutorial.js?v=2.6"></script>
-<script src="countdown.js?v=2.6"></script>
-<script src="home.js?v=2.6"></script>
-<script src="lerntyp.js?v=2.6"></script>
-<script src="lernmittel.js?v=2.6"></script>
-<script src="lernkarten.js?v=2.6"></script>
-<script src="quiz.js?v=2.6"></script>
-<script src="ziele.js?v=2.6"></script>
-<script src="wiki.js?v=2.6"></script>
-<script src="fokus.js?v=2.6"></script>
-<script src="kalender.js?v=2.6"></script>
-<script src="backup.js?v=2.6"></script>
-<script src="update.js?v=2.6"></script>
-<script src="tour.js?v=2.6"></script>
-<script src="start.js?v=2.6"></script>
+<script src="core.js?v=3.1"></script>
+<script src="tutorial.js?v=3.1"></script>
+<script src="countdown.js?v=3.1"></script>
+<script src="home.js?v=3.1"></script>
+<script src="lerntyp.js?v=3.1"></script>
+<script src="lernmittel.js?v=3.1"></script>
+<script src="lernkarten.js?v=3.1"></script>
+<script src="quiz.js?v=3.1"></script>
+<script src="textkarten.js?v=3.1"></script>
+<script src="ziele.js?v=3.1"></script>
+<script src="wiki.js?v=3.1"></script>
+<script src="fokus.js?v=3.1"></script>
+<script src="kalender.js?v=3.1"></script>
+<script src="backup.js?v=3.1"></script>
+<script src="update.js?v=3.1"></script>
+<script src="tour.js?v=3.1"></script>
+<script src="start.js?v=3.1"></script>
 </body>
 </html>

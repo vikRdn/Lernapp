@@ -60,6 +60,10 @@ const Lernkarten = (() => {
     box.append(h("h3", "", "Lernkarte aus dieser Notiz"),
       h("p", "lt-desc", "Markiere Text oben und tippe auf „Auswahl als Frage“ oder „Auswahl als Antwort“. Oder schreibe selbst."),
       w1, w2, row, save, msg);
+    const sug = h("button", "ghost", "Karten aus dem ganzen Text vorschlagen"), out = h("div");
+    sug.style.cssText = "width:100%;margin-top:6px";
+    sug.onclick = () => Textkarten.suggestPanel(out, m.text, { examId:m.examId, subject:m.subject, sourceId:m.id });
+    box.append(sug, out);
     return box;
   }
 
@@ -240,7 +244,7 @@ const Lernkarten = (() => {
     $("ckExam").onchange = () => { $("ckSubjectWrap").hidden = !!$("ckExam").value; };
     $("ckFilter").onchange = () => { filter = $("ckFilter").value; render(); };
   }
-  return { init, render, quickForm, closeForm, setFilter: f => { filter = f; }, practiceOpen: () => practice(data.cards.filter(c => !c.archived)),
+  return { init, render, quickForm, closeForm, create, setFilter: f => { filter = f; }, practiceOpen: () => practice(data.cards.filter(c => !c.archived)),
     practiceExam: id => {   // erst die Karten zum Lernen; sind alle gelernt, das Archiv
       const ex = data.exams.find(e => e.id === id), cs = data.cards.filter(c => inExam(c, ex)), todo = cs.filter(c => !c.archived);
       practice(todo.length ? todo : cs);

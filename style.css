@@ -212,6 +212,7 @@ input[type=date]::-webkit-date-and-time-value{text-align:left;min-width:0}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:10px}
 .tile{background:var(--bg);border-radius:14px;padding:12px;text-align:left;border:0;color:var(--text);font:inherit;cursor:pointer;display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch}
 .card>h3:first-child{margin-top:0}
+.featrow div{min-width:0;overflow-wrap:anywhere}
 /* Seite nie breiter als der Bildschirm: kein seitliches Wackeln (Zoomen und Hoch/Runter-Wischen bleiben) */
 html,body{max-width:100%;overflow-x:clip;touch-action:pan-y pinch-zoom}
 .card,.field,main,section{min-width:0;max-width:100%}
