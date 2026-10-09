@@ -311,6 +311,11 @@ const Lernmittel = (() => {
     render();
   }
   return { init, render, renderTabs, exportFiles, importFiles, clearFiles, closeForm, closeViewer, setPane, parseUrl,
+    addNote: (title, text, examId) => {   // z. B. eine Zusammenfassung aus „Nachschlagen“
+      data.materials.push({ id:newId(), type:"note", title:String(title).slice(0, 80) || "Notiz", text:String(text).slice(0, 20000),
+                            examId:examId || null, subject:"", createdAt:new Date().toISOString() });
+      saveData(); renderTabs();
+    },
     putDataUrl: (id, u) => putFile(id, dataUrlToBlob(u)),
     add: examId => {   // Formular öffnen, optional mit vorgewählter Prüfung
       setPane("material"); openForm();

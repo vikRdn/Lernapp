@@ -10,16 +10,20 @@ const TUT_STEPS = [
   { icon:"calendar", title:"Countdown", text:"Trage deine Prüfungen ein. Du siehst, wie viele Tage noch bleiben, und bekommst einen einfachen Lernplan." },
   { icon:"compass", title:"Lerntyp", text:"Beantworte ein paar Fragen. Du erfährst, wie du lernst, und bekommst Tipps, die zu dir passen." },
   { icon:"folder", title:"Lernmittel", text:"Sammle Notizen, Bilder und PDFs und ordne sie deinen Prüfungen zu. Daraus kannst du Lernkarten machen." },
-  { icon:"lock", title:"Deine Daten", text:"Alles bleibt auf deinem Gerät. Es gibt kein Konto. Mit dem ? oben siehst du diese Einführung wieder." },
+  { icon:"flag", title:"Ziele & Reflexion", text:"Setze dir Lernziele und hake sie ab. Nach dem Lernen schaust du kurz zurück: Was lief gut, was machst du anders?" },
+  { icon:"search", title:"Nachschlagen", text:"Schlage Begriffe bei Wikipedia nach und speichere die Zusammenfassung als Notiz." },
+  { icon:"lock", title:"Deine Daten", text:"Alles bleibt auf deinem Gerät. Es gibt kein Konto. Mit dem „?“ oben rechts siehst du diese Einführung wieder." },
   { icon:"palette", title:"Wie soll die App aussehen?", look:true,
     text:"Wähle ein Design und eine Farbe. Beides lässt sich später in den Einstellungen ändern." },
   { icon:"target", title:"Was brauchst du?", features:true,
-    text:"Wähle, was du nutzen möchtest. Alles andere blendet die App aus. Du kannst das später über das ? ändern. Beim ersten Mal folgt danach ein kurzer Rundgang durch die App." }
+    text:"Wähle, was du nutzen möchtest. Alles andere blendet die App aus. Du kannst das später über das „?“ oben rechts ändern. Beim ersten Mal folgt danach ein kurzer Rundgang durch die App." }
 ];
 const FEATURES = [   // [Schlüssel, Titel, Beschreibung]
   ["countdown", "Prüfungen und Lernplan", "Countdown und Lernaufgaben-Board", "calendar"],
   ["lerntyp", "Lerntyp-Test", "Fragen und passende Tipps", "compass"],
-  ["lernmittel", "Lernmittel", "Notizen, Bilder, PDFs, Lernkarten", "folder"]
+  ["lernmittel", "Lernmittel", "Notizen, Bilder, PDFs, Lernkarten", "folder"],
+  ["ziele", "Ziele & Reflexion", "Lernziele setzen und zurückschauen", "flag"],
+  ["wiki", "Nachschlagen", "Begriffe bei Wikipedia nachschlagen", "search"]
 ];
 function renderFeatures(){
   const box = document.getElementById("tutFeatures"); box.textContent = "";

@@ -223,6 +223,10 @@ const Lernkarten = (() => {
       const b = h("button", "primary", "Nicht gewusste nochmal (" + wrong.length + ")"); b.style.cssText = "width:100%;margin-bottom:8px";
       b.onclick = () => practice(wrong); body.appendChild(b);
     }
+    if(data.settings.features.ziele !== false){
+      const rf = h("button", "secondary", "Kurz reflektieren"); rf.style.cssText = "width:100%;margin-bottom:8px;border:1.5px solid var(--field-border)";
+      rf.onclick = () => { $("viewerClose").click(); Ziele.reflect(null); }; body.appendChild(rf);
+    }
     const done = h("button", "ghost", "Fertig"); done.style.width = "100%"; done.onclick = () => $("viewerClose").click();
     body.appendChild(done);
   }

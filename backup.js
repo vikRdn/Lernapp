@@ -59,9 +59,12 @@ const Backup = (() => {
       await Lernmittel.importFiles(p.files || {});
       data.exams = list("exams", okExam); data.tasks = list("tasks", okTask);
       data.materials = list("materials", okMat); data.cards = list("cards", okCard);
+      data.goals = list("goals", g => g && str(g.id) && str(g.text) && typeof g.done === "boolean");
+      data.reflections = list("reflections", r => r && str(r.id) && str(r.createdAt) && Number.isInteger(r.confidence) && r.confidence >= 1 && r.confidence <= 5);
       data.learnTypeResult = d.learnTypeResult || null;
       data.stats = { days:(d.stats && Array.isArray(d.stats.days) ? d.stats.days : []).filter(x => str(x) && /^\d{4}-\d{2}-\d{2}$/.test(x)).slice(-90) };
       data.settings = Object.assign(defaultData().settings, d.settings || {});
+      data.settings.features = Object.assign(defaultData().settings.features, data.settings.features);
       saveData(); location.reload();
     }catch(e){
       msg.textContent = "Das Einspielen ist fehlgeschlagen. Möglicherweise ist der Speicher voll.";

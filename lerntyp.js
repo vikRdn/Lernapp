@@ -225,5 +225,13 @@ const LernTest = (() => {
   }
   function init(){ render(); }
   function reset(){ running = false; render(); }   // für den Rundgang
-  return { init, reset, summary: () => data.learnTypeResult ? headline(data.learnTypeResult.types).title : null };
+  function goalIdeas(){   // Vorschläge für Lernziele: aus dem Testergebnis oder allgemein
+    const r = data.learnTypeResult;
+    if(!r) return ["Jeden Tag 15 Minuten Lernkarten üben.", "Vor jeder Lerneinheit aufschreiben, was ich schaffen will.", "Beim Lernen das Handy in einen anderen Raum legen."];
+    const ideas = leading(r.types).map(k => TIPS_TYPE[k][0]);
+    const weakest = Object.keys(GROUPS).sort((a,b) => r.strategy[a] - r.strategy[b])[0];
+    ideas.push(TIPS_GROUP[weakest][0]);
+    return ideas.slice(0, 3);
+  }
+  return { init, reset, goalIdeas, summary: () => data.learnTypeResult ? headline(data.learnTypeResult.types).title : null };
 })();

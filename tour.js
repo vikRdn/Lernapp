@@ -110,6 +110,27 @@ const Tour = (() => {
       });
       box.append(sw, wrap);
     },
+    goals(box){
+      const out = h("p", "pvr", "Tippe auf ein Ziel, um es abzuhaken."), col = h("div", "pvcol");
+      ["Bis Freitag Kapitel 3 zusammenfassen", "Jeden Tag 15 Minuten Karten üben"].forEach(t => {
+        const b = h("button", "pvb", t); b.type = "button"; b.setAttribute("aria-pressed", "false");
+        b.onclick = () => { const on = b.getAttribute("aria-pressed") !== "true"; b.setAttribute("aria-pressed", on);
+          out.textContent = on ? "✓ Ziel erreicht. Das zählt auch für deine Lernserie. (nur Beispiel)" : "Wieder offen."; };
+        col.appendChild(b);
+      });
+      box.append(col, out);
+    },
+    wiki(box){
+      const out = h("div", "pvr", "");
+      box.appendChild(h("p", "pvq", "Beispiel-Suche nach „Photosynthese“. Tippe auf den Treffer.")).style.margin = "0 0 8px";
+      buttons(box, [["p", "Photosynthese"]], () => {
+        const c = h("div", "pvcard");
+        c.append(h("b", "", "Photosynthese"), h("small", "", "Vorgang, bei dem Pflanzen mit Licht aus Wasser und Kohlendioxid Zucker und Sauerstoff bilden. (Beispieltext)"),
+                 h("small", "", "„Als Notiz speichern“ legt den Text mit Quelle bei deinen Lernmitteln ab."));
+        out.textContent = ""; out.appendChild(c);
+      });
+      box.appendChild(out);
+    },
     backup(box){
       const out = h("p", "pvr", "Tippe auf einen Knopf.");
       buttons(box, [["b", "Backup erstellen"], ["l", "Lernpaket teilen"]], k => {
@@ -135,11 +156,15 @@ const Tour = (() => {
       text:"Lege Notizen, Bilder, PDFs oder Links an und ordne sie einer Prüfung zu." },
     { view:"lernmittel", feature:"lernmittel", target:"#lmTabs", title:"Lernkarten", preview:"cards",
       text:"Aus Notizen machst du Lernkarten und übst sie. Deine eigenen Antworten werden im Verlauf gespeichert." },
+    { view:"ziele", feature:"ziele", target:"#zgNew", title:"Ziele & Reflexion", preview:"goals",
+      text:"Setze dir Lernziele und hake sie ab. Unter „Reflexion“ hältst du fest, was gut lief und was du änderst." },
+    { view:"wiki", feature:"wiki", target:"#wkQuery", title:"Nachschlagen", preview:"wiki",
+      text:"Schlage Begriffe bei Wikipedia nach und speichere die Zusammenfassung als Notiz. Das geht nur mit Internet." },
     { view:"home", target:"#btnTheme", title:"Aussehen", preview:"theme",
       text:"Hell oder dunkel, dazu Farben und Design findest du auch in den Einstellungen." },
     { view:"settings", target:"#bkExport", title:"Backup und Teilen", preview:"backup",
       text:"Erstelle ab und zu ein Backup, damit nichts verloren geht. Mit einem Lernpaket teilst du nur Lerninhalte." },
-    { view:"home", title:"Fertig!", text:"Mit dem ? oben siehst du die Einführung wieder. Den Rundgang findest du in den Einstellungen." }
+    { view:"home", title:"Fertig!", text:"Mit dem „?“ oben rechts siehst du die Einführung wieder. Den Rundgang findest du in den Einstellungen." }
   ];
   let steps = [], i = 0, running = false, token = 0;
 

@@ -99,6 +99,8 @@ const Countdown = (() => {
     // Lernmittel dieser Prüfung bleiben erhalten und behalten das Fach
     data.materials.forEach(m => { if(m.examId === ex.id){ m.examId = null; m.subject = m.subject || ex.subject; } });
     data.cards.forEach(c => { if(c.examId === ex.id){ c.examId = null; c.subject = c.subject || ex.subject; } });
+    data.goals.forEach(g => { if(g.examId === ex.id) g.examId = null; });
+    data.reflections.forEach(r => { if(r.examId === ex.id) r.examId = null; });
     saveData();
     if(editingId === ex.id) resetForm();
     render();

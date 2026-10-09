@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Lernen unter Prüfungsdruck</title>
-<link rel="stylesheet" href="style.css?v=2.0">
+<link rel="stylesheet" href="style.css?v=2.2">
 </head>
 <body>
 
@@ -118,6 +118,54 @@
   </section>
 
   <!-- EINSTELLUNGEN: Backup -->
+  <!-- ZIELE & REFLEXION -->
+  <section id="view-ziele" hidden>
+    <h2>Ziele &amp; Reflexion</h2>
+    <p class="sub">Plane dein Lernen mit Zielen und schau danach kurz zurück.</p>
+    <div class="seg" id="zgTabs"></div>
+    <div id="zgGoals">
+      <button class="primary" id="zgNew" style="margin-bottom:12px">+ Neues Ziel</button>
+      <div class="card" id="zgForm" hidden>
+        <div class="field"><label for="zgText">Was willst du erreichen?</label><textarea id="zgText" maxlength="200" style="min-height:70px" placeholder="z. B. Bis Freitag Kapitel 3 zusammenfassen"></textarea></div>
+        <p class="lt-desc" style="margin:-4px 0 10px">Tipp: Ein gutes Ziel ist konkret und hat einen Termin.</p>
+        <div id="zgIdeas"></div>
+        <div class="field"><label for="zgExam">Zu welcher Prüfung gehört es?</label><select id="zgExam"></select></div>
+        <div class="field"><label for="zgDue">Bis wann? (optional)</label><input type="date" id="zgDue"></div>
+        <p class="error" id="zgError" role="alert"></p>
+        <button class="primary" id="zgSave">Ziel speichern</button>
+        <button class="ghost" id="zgCancel">Abbrechen</button>
+      </div>
+      <div id="zgList"></div>
+    </div>
+    <div id="zgReflect" hidden>
+      <button class="primary" id="rfNew" style="margin-bottom:12px">+ Neue Reflexion</button>
+      <div class="card" id="rfForm" hidden>
+        <div class="field"><label for="rfExam">Worauf bezieht sie sich?</label><select id="rfExam"></select></div>
+        <div class="field"><label>Wie sicher fühlst du dich?</label><div class="seg" id="rfConf" style="margin-bottom:0"></div><p class="lt-desc" id="rfConfText" style="margin:6px 0 0"></p></div>
+        <div class="field"><label for="rfGood">Was lief gut?</label><textarea id="rfGood" maxlength="1000" style="min-height:70px"></textarea></div>
+        <div class="field"><label for="rfChange">Was machst du beim nächsten Mal anders?</label><textarea id="rfChange" maxlength="1000" style="min-height:70px"></textarea></div>
+        <p class="error" id="rfError" role="alert"></p>
+        <button class="primary" id="rfSave">Reflexion speichern</button>
+        <button class="ghost" id="rfCancel">Abbrechen</button>
+      </div>
+      <div id="rfList"></div>
+    </div>
+  </section>
+
+  <!-- NACHSCHLAGEN (Wikipedia) -->
+  <section id="view-wiki" hidden>
+    <h2>Nachschlagen</h2>
+    <p class="sub">Begriffe bei Wikipedia nachschlagen und als Notiz speichern.</p>
+    <div class="field" style="flex-direction:row;align-items:center;gap:8px">
+      <input type="search" id="wkQuery" placeholder="Begriff, z. B. Photosynthese" aria-label="Begriff suchen" autocomplete="off" style="flex:1;min-width:0">
+      <button class="primary" id="wkGo">Suchen</button>
+    </div>
+    <p class="lt-desc" style="margin:-4px 0 12px">Nur dein Suchbegriff wird an Wikipedia gesendet. Sonst verlassen keine Daten dein Gerät.</p>
+    <p class="lt-desc" id="wkMsg" role="status"></p>
+    <div class="card" id="wkArticle" hidden></div>
+    <div id="wkResults"></div>
+  </section>
+
   <section id="view-settings" hidden>
     <h2>Einstellungen</h2>
     <p class="sub">Aussehen, Rundgang, Backup und Daten.</p>
@@ -183,6 +231,8 @@
   <button class="tab" data-view="countdown"><i data-ic="calendar"></i>Countdown</button>
   <button class="tab" data-view="lerntyp"><i data-ic="compass"></i>Lerntyp</button>
   <button class="tab" data-view="lernmittel"><i data-ic="folder"></i>Lernmittel</button>
+  <button class="tab" data-view="ziele"><i data-ic="flag"></i>Ziele &amp; Reflexion</button>
+  <button class="tab" data-view="wiki"><i data-ic="search"></i>Nachschlagen</button>
   <button class="tab" data-view="settings"><i data-ic="sliders"></i>Einstellungen</button>
 </nav>
 
@@ -249,15 +299,17 @@
 </div>
 
 <!-- Die Scripte werden in dieser Reihenfolge geladen; spätere nutzen Funktionen der früheren. -->
-<script src="core.js?v=2.0"></script>
-<script src="tutorial.js?v=2.0"></script>
-<script src="countdown.js?v=2.0"></script>
-<script src="home.js?v=2.0"></script>
-<script src="lerntyp.js?v=2.0"></script>
-<script src="lernmittel.js?v=2.0"></script>
-<script src="lernkarten.js?v=2.0"></script>
-<script src="backup.js?v=2.0"></script>
-<script src="tour.js?v=2.0"></script>
-<script src="start.js?v=2.0"></script>
+<script src="core.js?v=2.2"></script>
+<script src="tutorial.js?v=2.2"></script>
+<script src="countdown.js?v=2.2"></script>
+<script src="home.js?v=2.2"></script>
+<script src="lerntyp.js?v=2.2"></script>
+<script src="lernmittel.js?v=2.2"></script>
+<script src="lernkarten.js?v=2.2"></script>
+<script src="ziele.js?v=2.2"></script>
+<script src="wiki.js?v=2.2"></script>
+<script src="backup.js?v=2.2"></script>
+<script src="tour.js?v=2.2"></script>
+<script src="start.js?v=2.2"></script>
 </body>
 </html>

@@ -10,14 +10,15 @@
 const STORAGE_KEY = "lernapp.v1";
 
 function defaultData(){
-  return { version:1, settings:{ theme:null, design:"frisch", accent:"blau", rewards:true, motion:true, tutorialDone:false, features:{ countdown:true, lerntyp:true, lernmittel:true } },
-           exams:[], tasks:[], learnTypeResult:null, materials:[], cards:[], stats:{ days:[] } };
+  return { version:1, settings:{ theme:null, design:"frisch", accent:"blau", rewards:true, motion:true, tutorialDone:false, features:{ countdown:true, lerntyp:true, lernmittel:true, ziele:true, wiki:true } },
+           exams:[], tasks:[], learnTypeResult:null, materials:[], cards:[], goals:[], reflections:[], stats:{ days:[] } };
 }
 function loadData(){
   try{ const raw = localStorage.getItem(STORAGE_KEY);
        if(!raw) return defaultData();
        const d = Object.assign(defaultData(), JSON.parse(raw));
        d.settings = Object.assign(defaultData().settings, d.settings);   // neue Einstellungen für alte Daten ergänzen
+       d.settings.features = Object.assign(defaultData().settings.features, d.settings.features);   // neue Bereiche sind sichtbar
        return d;
   }catch(e){ return defaultData(); }          // Speicher gesperrt oder kaputt
 }
@@ -75,6 +76,11 @@ const ICONS = {
   left:'<path d="M15 5l-7 7 7 7"/>',
   right:'<path d="M9 5l7 7-7 7"/>',
   x:'<path d="M6 6l12 12M18 6L6 18"/>',
+  down:'<path d="M5 9l7 7 7-7"/>',
+  flag:'<path d="M5 21V4"/><path d="M5 4h12l-2.5 4L17 12H5"/>',
+  circle:'<circle cx="12" cy="12" r="9"/>',
+  circlecheck:'<circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
   flame:'<path d="M12 3c1 3.5 5 5.6 5 10a5 5 0 0 1-10 0c0-2.6 1.5-4.1 2.5-5 .3 1.5 1 2.5 2 3 .4-3-1-5.6.5-8z"/>',
   trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8 21h8M9 17h6"/>',
   check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>'
@@ -196,6 +202,7 @@ function showView(name){
   setMenu(false);
   if(name === "home") Home.render();
   if(name === "lernmittel") Lernmittel.render();
+  if(name === "ziele") Ziele.render();
   if(name === "settings"){ Backup.render(); Look.build(document.getElementById("lookBox"), true); }
   window.scrollTo(0,0);
 }
@@ -210,7 +217,26 @@ function setMenu(open){
   scrim.classList.toggle("open", open);
   btnMenu.setAttribute("aria-expanded", open);
 }
-btnMenu.onclick = () => setMenu(!drawer.classList.contains("open"));
+const isDesktop = () => matchMedia("(min-width:900px)").matches;
+function applyNav(){   // Desktop: Seitenmenü eingeklappt oder sichtbar (gespeichert)
+  const collapsed = !!data.settings.navCollapsed;
+  document.documentElement.classList.toggle("nav-collapsed", collapsed);
+  if(isDesktop()) btnMenu.setAttribute("aria-expanded", !collapsed);
+}
+btnMenu.onclick = () => {
+  if(isDesktop()){ data.settings.navCollapsed = !data.settings.navCollapsed; saveData(); applyNav(); }
+  else setMenu(!drawer.classList.contains("open"));   // Handy: Menü als Schublade
+};
+applyNav();
+
+/* Datumsfelder: Kalender schon beim Antippen des Feldes öffnen
+   (manche Android-Browser markieren sonst nur „TT“ oder „JJJJ“) */
+document.addEventListener("click", e => {
+  const el = e.target;
+  if(el instanceof HTMLInputElement && el.type === "date" && typeof el.showPicker === "function"){
+    try{ el.showPicker(); }catch(err){}
+  }
+});
 scrim.onclick = () => setMenu(false);
 
 /* Filter für Lernmittel und Lernkarten: nach Prüfung, Fach oder "ohne Zuordnung" */

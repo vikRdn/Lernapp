@@ -64,12 +64,17 @@ const Home = (() => {
     box.appendChild(card);
   }
 
-  /* Die zwei Prüfungen danach, kurz */
+  /* Weitere Prüfungen: eingeklappt, auf Tipp alle anzeigen */
+  let showMore = false;
   function moreExams(box, upcoming){
-    const more = upcoming.slice(1, 3);
+    const more = upcoming.slice(1);
     if(!more.length) return;
-    const c = h("div", "card"); c.appendChild(h("h3", "", "Danach"));
-    more.forEach(ex => {
+    const c = h("div", "card"), tg = h("button", "fold");
+    tg.type = "button"; tg.setAttribute("aria-expanded", showMore);
+    tg.append(document.createTextNode("Weitere Prüfungen (" + more.length + ")"), icon("down", 20));
+    tg.onclick = () => { showMore = !showMore; render(); };
+    c.appendChild(tg);
+    if(showMore) more.forEach(ex => {
       const n = C.daysUntil(ex.date), r = h("button", "taskrow");
       r.append(examDot(ex.id), document.createTextNode(ex.subject));
       r.appendChild(h("small", "", C.dateOf(ex.date).toLocaleDateString("de-DE", { weekday:"short", day:"numeric", month:"short" }) +
@@ -120,6 +125,10 @@ const Home = (() => {
       const m = data.materials.length, n = data.cards.length, kn = data.cards.filter(c => c.archived).length;
       tiles.push(["Lernmittel", String(m), m === 1 ? "Eintrag" : "Einträge", null, () => { Lernmittel.setPane("material"); showView("lernmittel"); }]);
       tiles.push(["Lernkarten", n ? kn + " von " + n : "0", n ? "gelernt" : "Karten", n ? kn / n : null, () => { Lernmittel.setPane("cards"); showView("lernmittel"); }]);
+    }
+    if(f.ziele !== false){
+      const og = data.goals.filter(g => !g.done).length, dg = data.goals.length - og;
+      tiles.push(["Ziele", og + " offen", dg ? dg + " erreicht" : "setz dir ein Ziel", null, () => showView("ziele"), "flag"]);
     }
     if(!tiles.length) return;
     const c = h("div", "card"); c.appendChild(h("h3", "", "Dein Lernstand"));
