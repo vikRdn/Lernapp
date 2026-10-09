@@ -17,10 +17,10 @@ const Tour = (() => {
     if(text !== undefined) e.textContent = text;
     return e;
   }
-  function buttons(box, items, onPick){   // Auswahl-Knöpfe, einer ist gedrückt
+  function buttons(box, items, onPick, extra){   // Auswahl-Knöpfe, einer ist gedrückt (extra: zusätzliche Klasse)
     const row = h("div", "pvrow");
     items.forEach(([k, label]) => {
-      const b = h("button", "pvb", label); b.type = "button"; b.setAttribute("aria-pressed", "false");
+      const b = h("button", "pvb" + (extra ? " " + extra : ""), label); b.type = "button"; b.setAttribute("aria-pressed", "false");
       b.onclick = () => { row.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", "false")); b.setAttribute("aria-pressed", "true"); onPick(k); };
       row.appendChild(b);
     });
@@ -38,11 +38,22 @@ const Tour = (() => {
       box.appendChild(out);
     },
     menu(box){
-      const info = { home:"Start: nächste Prüfung und was heute dran ist.", countdown:"Countdown: deine Prüfungen und der Lernplan.",
-        lerntyp:"Lerntyp: Test mit Tipps, wie du am besten lernst.", lernmittel:"Lernmittel: Notizen, Bilder, PDFs, Links und Lernkarten.",
-        settings:"Einstellungen: Aussehen, Backup und Lernpaket teilen." };
+      const items = [["home", "Start", "Start: nächste Prüfung, Lernstand und was heute dran ist."],
+        ["countdown", "Countdown", "Countdown: deine Prüfungen, der Lernplan und der Kalender-Export."],
+        ["lerntyp", "Lerntyp", "Lerntyp: Test mit Tipps, wie du am besten lernst."],
+        ["lernmittel", "Lernmittel", "Lernmittel: Notizen, Bilder, PDFs, Links und Lernkarten."],
+        ["ziele", "Ziele & Reflexion", "Ziele & Reflexion: Lernziele setzen und danach zurückschauen."],
+        ["fokus", "Fokus-Timer", "Fokus-Timer: Lernen und Pausen im Wechsel, mit Lernzeit pro Tag."],
+        ["wiki", "Nachschlagen", "Nachschlagen: Begriffe bei Wikipedia nachschlagen."],
+        ["settings", "Einstellungen", "Einstellungen: Aussehen, Backup, Lernpaket, Kalender und Updates."]]
+        .filter(x => data.settings.features[x[0]] !== false);   // abgewählte Bereiche gibt es im Menü nicht
       const out = h("p", "pvr", "Tippe auf einen Bereich.");
-      buttons(box, [["home", "Start"], ["countdown", "Countdown"], ["lerntyp", "Lerntyp"], ["lernmittel", "Lernmittel"], ["settings", "Einstellungen"]], k => { out.textContent = info[k]; });
+      buttons(box, items.map(x => [x[0], x[1]]), k => {
+        out.textContent = items.find(x => x[0] === k)[2];
+        $("tourText").hidden = true;   // Karte kürzen, damit sie den hervorgehobenen Menüpunkt nicht verdeckt
+        const el = document.querySelector('#drawer .tab[data-view="' + k + '"]');   // genau diesen Menüpunkt hervorheben
+        if(el && el.getClientRects().length) place(el, 4);
+      }, "sm");
       box.appendChild(out);
     },
     exam(box){
@@ -153,7 +164,7 @@ const Tour = (() => {
     { view:"home", target:"#homeAdd", title:"Schnell hinzufügen", preview:"add",
       text:"Mit diesem Knopf legst du eine Prüfung oder einen Lerninhalt an. Das geht von der Startseite aus immer." },
     { view:"home", menu:true, target:"#drawer", title:"Das Menü", preview:"menu",
-      text:"Mit dem Menü-Symbol oben links öffnest du das Menü. Am Computer steht es immer links." },
+      text:"Mit dem Menü-Symbol oben links öffnest du das Menü. Tippe unten einen Bereich an, dann leuchtet er im Menü auf." },
     { view:"countdown", feature:"countdown", target:"#examNew", title:"Prüfungen eintragen", preview:"exam",
       text:"Trage Fach und Datum ein. Du siehst die Tage bis dahin und bekommst einen Lernplan mit Aufgaben zum Abhaken." },
     { view:"lerntyp", feature:"lerntyp", target:"#ltBox > *", title:"Lerntyp-Test", preview:"test",
@@ -176,15 +187,17 @@ const Tour = (() => {
   ];
   let steps = [], i = 0, running = false, token = 0;
 
-  function place(el){   // Lichtkegel und Hinweiskarte positionieren
-    const spot = $("tourSpot"), tip = $("tourTip"), pad = 8;
+  function place(el, padding){   // Lichtkegel und Hinweiskarte positionieren (padding: Abstand um das Element)
+    const spot = $("tourSpot"), tip = $("tourTip"), pad = padding === undefined ? 8 : padding;
     spot.classList.remove("pulse");
     if(el){
       const r = el.getBoundingClientRect();
       spot.style.left = (r.left - pad) + "px"; spot.style.top = (r.top - pad) + "px";
       spot.style.width = (r.width + 2 * pad) + "px"; spot.style.height = (r.height + 2 * pad) + "px";
       spot.classList.add("pulse");
-      const lower = r.top + r.height / 2 > innerHeight * 0.55;   // Ziel unten: Hinweis nach oben
+      // Hinweiskarte dorthin, wo sie das Ziel nicht verdeckt (sonst nach der Lage des Ziels)
+      const th = tip.offsetHeight, over = Math.max(0, (r.bottom + pad) - (innerHeight - 12 - th)), overTop = Math.max(0, (12 + th) - (r.top - pad));
+      const lower = over !== overTop ? overTop < over : r.top + r.height / 2 > innerHeight * 0.55;
       tip.style.top = lower ? "calc(env(safe-area-inset-top,0px) + 12px)" : "auto";
       tip.style.bottom = lower ? "auto" : "calc(env(safe-area-inset-bottom,0px) + 12px)";
     } else {   // kein Ziel: nur Hinweis in der Mitte
@@ -195,7 +208,7 @@ const Tour = (() => {
   async function show(){
     const my = ++token, st = steps[i], pv = $("tourPreview");
     $("tourCount").textContent = "Schritt " + (i + 1) + " von " + steps.length;
-    $("tourTitle").textContent = st.title; $("tourText").textContent = st.text;
+    $("tourTitle").textContent = st.title; $("tourText").textContent = st.text; $("tourText").hidden = false;
     pv.textContent = ""; pv.hidden = !st.preview;
     if(st.preview){
       const box = h("div", "pv"); box.appendChild(h("small", "pvt", "Zum Ausprobieren (nur ein Beispiel)"));
@@ -213,10 +226,10 @@ const Tour = (() => {
   }
   function start(){
     steps = STEPS.filter(s => !s.feature || data.settings.features[s.feature]);
-    i = 0; running = true; $("tour").hidden = false; show();
+    i = 0; running = true; $("tour").hidden = false; document.documentElement.classList.add("tour-on"); show();
   }
   function end(){
-    running = false; token++; $("tour").hidden = true; setMenu(false);
+    running = false; token++; $("tour").hidden = true; document.documentElement.classList.remove("tour-on"); setMenu(false);
     data.settings.tourDone = true; saveData(); showView("home");
   }
   function init(){

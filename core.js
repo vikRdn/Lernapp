@@ -217,6 +217,7 @@ document.getElementById("brand").onclick = () => showView("home");   // Logo = z
 /* Seitenmenü auf- und zuklappen */
 const drawer = document.getElementById("drawer"), scrim = document.getElementById("scrim"), btnMenu = document.getElementById("btnMenu");
 function setMenu(open){
+  document.documentElement.classList.toggle("menu-open", open);   // Seite dahinter fest
   drawer.classList.toggle("open", open);
   scrim.classList.toggle("open", open);
   btnMenu.setAttribute("aria-expanded", open);
@@ -242,6 +243,60 @@ document.addEventListener("click", e => {
   }
 });
 scrim.onclick = () => setMenu(false);
+
+/* Fenster und Menü: Wischen bewegt nie die Seite dahinter.
+   guardScroll: Fenster (scroller) dürfen selbst scrollen, an ihren Grenzen und außerhalb passiert nichts. */
+function guardScroll(overlay, scroller){
+  if(!overlay) return;
+  let startY = 0;
+  overlay.addEventListener("touchstart", e => { if(e.touches.length === 1) startY = e.touches[0].clientY; }, { passive:true });
+  overlay.addEventListener("touchmove", e => {
+    if(e.touches.length > 1) return;   // Zoomen mit zwei Fingern bleibt erlaubt
+    const sc = typeof scroller === "function" ? scroller() : scroller;
+    if(sc && sc.contains(e.target) && sc.scrollHeight > sc.clientHeight + 1){
+      const dy = e.touches[0].clientY - startY, atTop = sc.scrollTop <= 0, atBottom = sc.scrollTop + sc.clientHeight >= sc.scrollHeight - 1;
+      if(!((dy > 0 && atTop) || (dy < 0 && atBottom))) return;   // normales Scrollen im Fenster
+    }
+    if(e.cancelable) e.preventDefault();
+  }, { passive:false });
+  overlay.addEventListener("wheel", e => {   // Maus und Touchpad ebenso
+    const sc = typeof scroller === "function" ? scroller() : scroller;
+    if(sc && sc.contains(e.target) && sc.scrollHeight > sc.clientHeight + 1){
+      const can = e.deltaY < 0 ? sc.scrollTop > 0 : sc.scrollTop + sc.clientHeight < sc.scrollHeight - 1;
+      if(can) return;
+    }
+    if(e.cancelable) e.preventDefault();
+  }, { passive:false });
+}
+guardScroll(scrim, null);
+guardScroll(document.getElementById("tour"), () => document.getElementById("tourTip"));
+guardScroll(document.getElementById("tutorial"), () => document.querySelector("#tutorial .sheet"));
+guardScroll(document.getElementById("dialog"), () => document.querySelector("#dialog .sheet"));
+guardScroll(document.getElementById("addSheet"), () => document.querySelector("#addSheet .sheet"));
+guardScroll(document.getElementById("viewer"), () => document.getElementById("viewerBody"));
+
+/* Menü: Gummiband (Bounce) an den Grenzen. Passt der Inhalt ganz hinein, federt er bei jedem Wischen leicht mit
+   und springt zurück. Die Seite rechts bleibt still. */
+(() => {
+  const inner = document.getElementById("drawerInner");
+  const calm = () => matchMedia("(prefers-reduced-motion: reduce)").matches || document.documentElement.dataset.motion === "off";
+  let startY = 0;
+  drawer.addEventListener("touchstart", e => { if(e.touches.length === 1){ startY = e.touches[0].clientY; inner.style.transition = "none"; } }, { passive:true });
+  drawer.addEventListener("touchmove", e => {
+    if(e.touches.length > 1) return;
+    const dy = e.touches[0].clientY - startY, atTop = drawer.scrollTop <= 0, atBottom = drawer.scrollTop + drawer.clientHeight >= drawer.scrollHeight - 1;
+    if((dy > 0 && atTop) || (dy < 0 && atBottom)){   // an der Grenze: Gummiband, nie die Seite
+      if(!calm()) inner.style.transform = "translateY(" + (Math.sign(dy) * Math.min(110, Math.abs(dy) * 0.4)) + "px)";
+      if(e.cancelable) e.preventDefault();
+    } else inner.style.transform = "";
+  }, { passive:false });
+  const back = () => { inner.style.transition = calm() ? "none" : "transform .5s cubic-bezier(.25,1.6,.5,1)"; inner.style.transform = ""; };
+  drawer.addEventListener("touchend", back); drawer.addEventListener("touchcancel", back);
+  drawer.addEventListener("wheel", e => {   // Maus und Touchpad: nur das Menü scrollt, nie die Seite daneben
+    const can = e.deltaY < 0 ? drawer.scrollTop > 0 : drawer.scrollTop + drawer.clientHeight < drawer.scrollHeight - 1;
+    if(!can && e.cancelable) e.preventDefault();
+  }, { passive:false });
+})();
 
 /* Filter für Lernmittel und Lernkarten: nach Prüfung, Fach oder "ohne Zuordnung" */
 function inExam(m, ex){   // gehört zur Prüfung: direkt zugeordnet oder freies Fach mit gleichem Namen

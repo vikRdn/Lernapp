@@ -24,7 +24,10 @@ button:focus-visible,.tab:focus-visible{outline:3px solid var(--accent);outline-
 /* Seitenmenü (Drawer) */
 .scrim{position:fixed;inset:0;z-index:10;background:rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .2s}
 .scrim.open{opacity:1;pointer-events:auto}
-#drawer{position:fixed;top:0;bottom:0;left:0;width:min(290px,82vw);z-index:11;background:var(--card);transform:translateX(-102%);visibility:hidden;transition:transform .25s,visibility 0s .25s;padding:calc(env(safe-area-inset-top,0px) + 16px) 12px 16px;display:flex;flex-direction:column;gap:4px}
+#drawer{position:fixed;top:0;bottom:0;left:0;width:min(290px,82vw);z-index:11;background:var(--card);transform:translateX(-102%);visibility:hidden;transition:transform .25s,visibility 0s .25s;padding:calc(env(safe-area-inset-top,0px) + 16px) 12px 16px;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y}
+#drawerInner{display:flex;flex-direction:column;gap:4px;will-change:transform}
+.scrim{touch-action:none}
+#tourTip{overscroll-behavior:contain}
 #drawer.open{transform:none;visibility:visible;transition:transform .25s}
 #drawer h2{font-size:1.1rem;margin:8px 12px 12px}
 .tab{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;color:var(--text);padding:12px;border-radius:12px;font-size:1.05rem;text-align:left;cursor:pointer}
@@ -191,6 +194,7 @@ input[type=date]::-webkit-date-and-time-value{text-align:left;min-width:0}
 .pvcol{display:flex;flex-direction:column;gap:8px}
 .pvf{display:flex;flex-direction:column;gap:8px}
 .pvb{background:var(--card);color:var(--text);border:1.5px solid var(--field-border);border-radius:12px;padding:9px 12px;font:inherit;font-size:.92rem;cursor:pointer;text-align:left}
+.pvb.sm{padding:6px 10px;font-size:.85rem}
 .pvb[aria-pressed="true"]{background:var(--accent);color:var(--accent-text);border-color:var(--accent)}
 .pvr{margin:10px 0 0;font-size:.92rem;color:var(--muted)}
 .pvcard{background:var(--card);border-radius:12px;padding:10px 12px;margin-top:8px;color:var(--text)}
