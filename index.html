@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Lernen unter Prüfungsdruck</title>
-<link rel="stylesheet" href="style.css?v=2.3">
+<link rel="stylesheet" href="style.css?v=2.4">
 </head>
 <body>
 
@@ -87,7 +87,7 @@
         <input type="text" id="lmTitle" maxlength="80" placeholder="z. B. Zusammenfassung Kapitel 2" autocomplete="off"></div>
       <div class="field" id="lmTextWrap"><label for="lmText">Notiz</label><textarea id="lmText" maxlength="20000"></textarea></div>
       <div class="field" id="lmFileWrap" hidden><label for="lmFile" id="lmFileLabel">Datei</label><button type="button" class="pick" id="lmPick">Datei auswählen</button>
-        <input type="file" id="lmFile" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden" tabindex="-1">
+        <input type="file" id="lmFile" class="vh" tabindex="-1">
         <div class="lt-desc" id="lmPicked" aria-live="polite"></div></div>
       <div class="field" id="lmUrlWrap" hidden><label for="lmUrl">Adresse (Link)</label><input type="text" inputmode="url" id="lmUrl" placeholder="z. B. www.beispiel.de/seite" autocapitalize="off" autocomplete="off"></div>
       <div class="field"><label for="lmExam">Zu welcher Prüfung gehört es?</label><select id="lmExam"></select></div>
@@ -188,7 +188,7 @@
       <h3 style="margin-top:0">Backup einspielen</h3>
       <p class="lt-desc" style="margin-bottom:12px">Ersetzt deine aktuellen Daten durch die Daten aus einer Backup-Datei.</p>
       <button type="button" class="pick" id="bkPick">Backup-Datei auswählen</button>
-      <input type="file" id="bkFile" accept="application/json,.json" style="position:absolute;width:1px;height:1px;opacity:0" tabindex="-1">
+      <input type="file" id="bkFile" accept="application/json,.json" class="vh" tabindex="-1">
       <p class="lt-desc" id="bkMsg2" role="status"></p>
     </div>
     <div class="card">
@@ -210,7 +210,7 @@
       <p class="lt-desc" style="margin-bottom:12px">Fügt die Inhalte eines Lernpakets zu deinen hinzu. Nichts wird ersetzt.</p>
       <div class="field"><label for="pkTarget">Zuordnen zu</label><select id="pkTarget"></select></div>
       <button type="button" class="pick" id="pkPick">Lernpaket-Datei auswählen</button>
-      <input type="file" id="pkFile" accept="application/json,.json" style="position:absolute;width:1px;height:1px;opacity:0" tabindex="-1">
+      <input type="file" id="pkFile" accept="application/json,.json" class="vh" tabindex="-1">
       <p class="lt-desc" id="pkMsg2" role="status"></p>
     </div>
     <div class="card">
@@ -299,17 +299,17 @@
 </div>
 
 <!-- Die Scripte werden in dieser Reihenfolge geladen; spätere nutzen Funktionen der früheren. -->
-<script src="core.js?v=2.3"></script>
-<script src="tutorial.js?v=2.3"></script>
-<script src="countdown.js?v=2.3"></script>
-<script src="home.js?v=2.3"></script>
-<script src="lerntyp.js?v=2.3"></script>
-<script src="lernmittel.js?v=2.3"></script>
-<script src="lernkarten.js?v=2.3"></script>
-<script src="ziele.js?v=2.3"></script>
-<script src="wiki.js?v=2.3"></script>
-<script src="backup.js?v=2.3"></script>
-<script src="tour.js?v=2.3"></script>
-<script src="start.js?v=2.3"></script>
+<script src="core.js?v=2.4"></script>
+<script src="tutorial.js?v=2.4"></script>
+<script src="countdown.js?v=2.4"></script>
+<script src="home.js?v=2.4"></script>
+<script src="lerntyp.js?v=2.4"></script>
+<script src="lernmittel.js?v=2.4"></script>
+<script src="lernkarten.js?v=2.4"></script>
+<script src="ziele.js?v=2.4"></script>
+<script src="wiki.js?v=2.4"></script>
+<script src="backup.js?v=2.4"></script>
+<script src="tour.js?v=2.4"></script>
+<script src="start.js?v=2.4"></script>
 </body>
 </html>
